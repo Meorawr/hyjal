@@ -1,0 +1,20 @@
+{
+  "name": "elune",
+  "version-string": "325632b",
+  "description": "Lua 5.1 with support for World of Warcraft-style tainted execution",
+  "homepage": "https://github.com/Meorawr/elune",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "utf8h"
+    }
+  ]
+}

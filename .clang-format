@@ -1,0 +1,19 @@
+---
+BasedOnStyle: WebKit
+Standard: c++20
+
+Cpp11BracedListStyle: true
+NamespaceIndentation: All
+SpaceBeforeCpp11BracedList: false
+SpaceAfterTemplateKeyword: false
+
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^"'
+    Priority: 1
+  - Regex: "^<(fmt|lua)[/\\.]"
+    Priority: 2
+  - Regex: "<[[:alnum:]_-]+>"
+    Priority: 3
+  - Regex: "<[[:alnum:]_-]+\\."
+    Priority: 4

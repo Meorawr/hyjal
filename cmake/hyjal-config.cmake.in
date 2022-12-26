@@ -1,0 +1,14 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+set(_hyjal_supported_components hyjal)
+
+foreach(_comp ${hyjal_FIND_COMPONENTS})
+  if(NOT _comp IN_LIST _hyjal_supported_components)
+    set(hyjal_FOUND False)
+    set(hyjal_NOT_FOUND_MESSAGE "Unsupported component: ${_comp}")
+  endif()
+
+  include("${CMAKE_CURRENT_LIST_DIR}/${_comp}-targets.cmake")
+endforeach()

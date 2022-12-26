@@ -1,0 +1,29 @@
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO meorawr/elune
+  REF 325632b02f77b2e11cd60e98279de1c2bc3178f8
+  SHA512 0c6d7665c7b87e11a89540a98a02d48a48d8530e3e436c1e53322e3138dc0c4535acdf9a93a7d532420129506c7539cf8af7a440e47b5c50965b51bc1fb23553
+  HEAD_REF main
+)
+
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    -DBUILD_CXX=ON
+    -DBUILD_TESTING=OFF
+    -DBUILD_PACKAGE=OFF
+    -DBUILD_SUMMARY=OFF
+    -DBUILD_LUA=OFF
+    -DBUILD_LUAC=OFF
+    -DLUA_USE_READLINE=OFF
+)
+
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
+  vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
