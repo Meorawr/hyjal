@@ -8,11 +8,124 @@
 
 #include <exception>
 
-extern "C" {
-    HYJAL_API int luaopen_hyjal(struct lua_State* L) noexcept
-    try {
+namespace {
+    int create_font(lua_State* L)
+    {
+        lua_createtable(L, 0, 0); // TODO: Object creation.
+        return 1;
+    }
+
+    int create_frame(lua_State* L)
+    {
+        lua_createtable(L, 0, 0); // TODO: Object creation.
+        return 1;
+    }
+
+    int does_template_exist(lua_State* L)
+    {
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    int enumerate_frames(lua_State* L)
+    {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    int get_click_frame(lua_State* L)
+    {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    int get_current_keyboard_focus(lua_State* L)
+    {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    int get_default_scale(lua_State* L)
+    {
+        lua_pushnumber(L, 1.0);
+        return 1;
+    }
+
+    int get_font_info(lua_State* L)
+    {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    int get_fonts(lua_State* L)
+    {
         lua_createtable(L, 0, 0);
         return 1;
+    }
+
+    int get_frames_registered_for_event(lua_State* L)
+    {
+        lua_unused(L);
+        return 0;
+    }
+
+    int get_mouse_button_name(lua_State* L)
+    {
+        lua_pushliteral(L, "LeftButton");
+        return 1;
+    }
+
+    int get_mouse_click_focus(lua_State* L)
+    {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    int get_mouse_focus(lua_State* L)
+    {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    int get_mouse_motion_focus(lua_State* L)
+    {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    int get_num_frames(lua_State* L)
+    {
+        lua_pushinteger(L, 0);
+        return 1;
+    }
+
+    const luaL_Reg GLOBAL_SCRIPT_FUNCTIONS[] = {
+        {.name = "CreateFont", .func = create_font},
+        {.name = "CreateFrame", .func = create_frame},
+        {.name = "DoesTemplateExist", .func = does_template_exist},
+        {.name = "EnumerateFrames", .func = enumerate_frames},
+        {.name = "GetClickFrame", .func = get_click_frame},
+        {.name = "GetCurrentKeyboardFocus", .func = get_current_keyboard_focus},
+        {.name = "GetDefaultScale", .func = get_default_scale},
+        {.name = "GetFontInfo", .func = get_font_info},
+        {.name = "GetFonts", .func = get_fonts},
+        {.name = "GetFramesRegisteredForEvent", .func = get_frames_registered_for_event},
+        {.name = "GetMouseButtonName", .func = get_mouse_button_name},
+        {.name = "GetMouseClickFocus", .func = get_mouse_click_focus},
+        {.name = "GetMouseFocus", .func = get_mouse_focus},
+        {.name = "GetMouseMotionFocus", .func = get_mouse_motion_focus},
+        {.name = "GetNumFrames", .func = get_num_frames},
+        {.name = nullptr, .func = nullptr},
+    };
+}
+
+extern "C" {
+
+    HYJAL_API int luaopen_hyjal(struct lua_State* L) noexcept
+    try {
+        lua_pushvalue(L, LUA_GLOBALSINDEX);
+        luaL_setfuncs(L, GLOBAL_SCRIPT_FUNCTIONS, 0);
+        return 0;
     } catch (const std::exception& ex) {
         return luaL_error(L, "%s", ex.what());
     }
