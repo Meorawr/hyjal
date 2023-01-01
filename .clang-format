@@ -12,9 +12,11 @@ IncludeBlocks: Regroup
 IncludeCategories:
   - Regex: '^"'
     Priority: 1
-  - Regex: "^<(fmt|lua)[/\\.]"
+  - Regex: "^<meorawr/hyjal/"
     Priority: 2
-  - Regex: "<[[:alnum:]_-]+>"
+  - Regex: "^<(fmt|lua)[/\\.]"
     Priority: 3
-  - Regex: "<[[:alnum:]_-]+\\."
+  - Regex: "<[[:alnum:]_-]+>"
     Priority: 4
+  - Regex: "<[[:alnum:]_-]+\\."
+    Priority: 5

@@ -4,19 +4,16 @@
 
 #include "hyjal.hpp"
 
-#include <fmt/core.h>
 #include <lua.hpp>
 
-namespace meorawr::hyjal {
-    void hello()
-    {
-        lua_State* L = luaL_newstate();
-        luaL_openlibsx(L, LUALIB_ELUNE);
-        lua_getfield(L, LUA_GLOBALSINDEX, "print");
-        lua_pushstring(L, fmt::format("{}", "Hello! :)").c_str());
-        lua_getfield(L, LUA_GLOBALSINDEX, "issecure");
-        lua_call(L, 0, 1);
-        lua_call(L, 2, 0);
-        lua_close(L);
+#include <exception>
+
+extern "C" {
+    HYJAL_API int luaopen_hyjal(struct lua_State* L) noexcept
+    try {
+        lua_createtable(L, 0, 0);
+        return 1;
+    } catch (const std::exception& ex) {
+        return luaL_error(L, "%s", ex.what());
     }
 }

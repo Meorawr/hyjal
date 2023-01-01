@@ -52,7 +52,6 @@ add_library(hyjal::config ALIAS hyjal_config)
 target_compile_definitions(
   hyjal_config
   INTERFACE
-    HYJAL_DISABLE_NAMESPACE_ALIAS
     $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
     $<$<PLATFORM_ID:Windows>:UNICODE>
     $<$<PLATFORM_ID:Windows>:_UNICODE>
@@ -84,7 +83,7 @@ target_link_options(
 )
 
 ##
-## hyjal Library Target
+## Library Target
 ##
 
 add_library(hyjal)
@@ -124,11 +123,11 @@ target_sources(
   PUBLIC
     FILE_SET HEADERS
     BASE_DIRS
-      include
+      "include"
     FILES
-      include/meorawr/hyjal/hyjal.hpp
+      "include/meorawr/hyjal/hyjal.hpp"
   PRIVATE
-    src/hyjal.cpp
+    "src/hyjal.cpp"
 )
 
 ##
@@ -144,13 +143,14 @@ if(BUILD_TESTING)
     PRIVATE
       hyjal::config
       hyjal::hyjal
+      elune::liblua
   )
 
   target_sources(
     hyjal_tests
     PRIVATE
-      test/test.cpp
-  )
+      "test/test.cpp"
+ )
 endif()
 
 ##

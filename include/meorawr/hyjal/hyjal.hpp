@@ -28,19 +28,7 @@
 #define HYJAL_API
 #endif
 
-#if defined(__cplusplus)
-
 namespace meorawr::hyjal {
-    HYJAL_API void hello();
 }
 
-#if !defined(HYJAL_DISABLE_NAMESPACE_ALIAS)
-#if defined(HYJAL_NAMESPACE_ALIAS)
-namespace HYJAL_NAMESPACE_ALIAS = meorawr::hyjal;
-#else
-namespace hyjal = meorawr::hyjal;
-#endif
-#endif
-
-#endif
 #endif
