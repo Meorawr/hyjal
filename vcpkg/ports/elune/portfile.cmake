@@ -9,7 +9,6 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-    -DBUILD_CXX=ON
     -DBUILD_TESTING=OFF
     -DBUILD_PACKAGE=OFF
     -DBUILD_SUMMARY=OFF
