@@ -128,6 +128,12 @@ target_sources(
       "include/meorawr/hyjal/hyjal.hpp"
   PRIVATE
     "src/hyjal.cpp"
+    "src/uiframe.cpp"
+    "src/uiframe.hpp"
+    "src/uiobject.cpp"
+    "src/uiobject.hpp"
+    "src/uistate.cpp"
+    "src/uistate.hpp"
 )
 
 ##

@@ -4,11 +4,23 @@
 
 #include "hyjal.hpp"
 
+#include "uiframe.hpp"
+#include "uiobject.hpp"
+#include "uistate.hpp"
+
 #include <lua.hpp>
 
 #include <exception>
+#include <string_view>
 
 namespace {
+    template<typename T>
+    int destroy_object(lua_State* L) noexcept
+    {
+        static_cast<T*>(lua_touserdata(L, -1))->~T();
+        return 0;
+    }
+
     int create_font(lua_State* L)
     {
         lua_createtable(L, 0, 0); // TODO: Object creation.
@@ -17,7 +29,24 @@ namespace {
 
     int create_frame(lua_State* L)
     {
-        lua_createtable(L, 0, 0); // TODO: Object creation.
+        using namespace std::literals;
+        using meorawr::hyjal::UiFrame;
+
+        // TODO: Metatable caching and a whole lot of other stuff.
+        // TODO: Objects of course don't get GC'd...
+
+        lua_createtable(L, 0, 1);
+        lua_pushcclosure(L, destroy_object<UiFrame>, 0);
+        lua_setfield(L, -2, "__gc");
+
+        new (lua_newuserdata(L, sizeof(UiFrame))) UiFrame("test"sv, nullptr);
+        lua_insert(L, -2);
+        lua_setmetatable(L, -2);
+
+        lua_createtable(L, 0, 1);
+        lua_insert(L, -2);
+        lua_rawseti(L, -2, 0);
+
         return 1;
     }
 
@@ -120,12 +149,23 @@ namespace {
 }
 
 extern "C" {
-
     HYJAL_API int luaopen_hyjal(struct lua_State* L) noexcept
     try {
+        using meorawr::hyjal::UiState;
+
+        lua_createtable(L, 0, 1);
+        lua_pushcclosure(L, destroy_object<UiState>, 0);
+        lua_setfield(L, -2, "__gc");
+
+        new (lua_newuserdata(L, sizeof(UiState))) UiState(L);
+        lua_insert(L, -2);
+        lua_setmetatable(L, -2);
+
         lua_pushvalue(L, LUA_GLOBALSINDEX);
-        luaL_setfuncs(L, GLOBAL_SCRIPT_FUNCTIONS, 0);
-        return 0;
+        lua_pushvalue(L, -2);
+        luaL_setfuncs(L, GLOBAL_SCRIPT_FUNCTIONS, 1);
+
+        return 1;
     } catch (const std::exception& ex) {
         return luaL_error(L, "%s", ex.what());
     }
