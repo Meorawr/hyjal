@@ -1,9 +1,9 @@
 {
-    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-    "name": "hyjal",
-    "version-string": "dev",
-    "dependencies": [
-      "elune",
-      "fmt"
-    ]
-  }
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "hyjal",
+  "version-string": "dev",
+  "dependencies": [
+    "elune",
+    "fmt"
+  ]
+}
