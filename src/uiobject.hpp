@@ -10,6 +10,7 @@
 namespace meorawr::hyjal {
     class UiObject {
     public:
+        UiObject(std::string_view name, UiObject* parent);
         UiObject(const UiObject&) = delete;
         UiObject(UiObject&&) = delete;
 
@@ -19,12 +20,17 @@ namespace meorawr::hyjal {
         virtual ~UiObject() noexcept;
 
         std::string_view name() const noexcept;
+        UiObject* parent() const noexcept;
 
-    protected:
-        UiObject(std::string_view name);
+        void set_parent(UiObject* parent);
 
     private:
-        const std::string_view _name; // TODO: Central string table with Lua state.
+        std::string_view _name; // TODO: Central string table with Lua state.
+        UiObject* _parent = nullptr;
+        UiObject* _child_head = nullptr;
+        UiObject* _child_tail = nullptr;
+        UiObject* _sibling_prev = nullptr;
+        UiObject* _sibling_next = nullptr;
     };
 }
 

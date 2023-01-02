@@ -10,7 +10,7 @@
 namespace meorawr::hyjal {
     class UiFrame : public UiObject {
     public:
-        UiFrame(std::string_view name, UiFrame* parent);
+        UiFrame(std::string_view name, UiObject* parent);
         UiFrame(const UiFrame&) = delete;
         UiFrame(UiFrame&&) = delete;
 
@@ -18,11 +18,6 @@ namespace meorawr::hyjal {
         UiFrame& operator=(UiFrame&&) = delete;
 
         ~UiFrame() noexcept override;
-
-        UiFrame* get_parent() const noexcept;
-
-    private:
-        UiFrame* _parent;
     };
 }
 

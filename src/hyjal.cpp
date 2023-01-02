@@ -27,25 +27,56 @@ namespace {
         return 1;
     }
 
+    int temp_getparent(lua_State* L)
+    {
+        using meorawr::hyjal::UiObject;
+        lua_rawgeti(L, 1, 0);
+        UiObject* o = static_cast<UiObject*>(lua_touserdata(L, -1));
+
+        if (UiObject* p = o->parent())
+            lua_pushlightuserdata(L, p);
+        else
+            lua_pushnil(L);
+
+        return 1;
+    }
+
     int create_frame(lua_State* L)
     {
         using namespace std::literals;
         using meorawr::hyjal::UiFrame;
-
-        // TODO: Metatable caching and a whole lot of other stuff.
-        // TODO: Objects of course don't get GC'd...
+        using meorawr::hyjal::UiObject;
 
         lua_createtable(L, 0, 1);
-        lua_pushcclosure(L, destroy_object<UiFrame>, 0);
-        lua_setfield(L, -2, "__gc");
 
-        new (lua_newuserdata(L, sizeof(UiFrame))) UiFrame("test"sv, nullptr);
+        UiObject* parent = nullptr;
+
+        // TODO: Converting a {[0] = ud} table will be quite common so should
+        //       get lifted into a utility.
+        if (lua_istable(L, 1)) {
+            lua_rawgeti(L, 1, 0);
+            parent = static_cast<UiObject*>(lua_touserdata(L, -1));
+            lua_pop(L, 1);
+        }
+
+        if (!parent)
+            parent = static_cast<UiObject*>(lua_touserdata(L, lua_upvalueindex(1)));
+
+        lua_pushlightuserdata(L, new UiFrame("test"sv, parent));
+        lua_rawseti(L, -2, 0);
+
+        lua_createtable(L, 0, 1);
+        lua_pushcclosure(L, temp_getparent, 0);
+        lua_setfield(L, -2, "GetParent");
+
+        lua_createtable(L, 0, 1);
         lua_insert(L, -2);
+        lua_setfield(L, -2, "__index");
+
         lua_setmetatable(L, -2);
 
-        lua_createtable(L, 0, 1);
-        lua_insert(L, -2);
-        lua_rawseti(L, -2, 0);
+        lua_pushvalue(L, -1);
+        luaL_ref(L, LUA_REGISTRYINDEX);
 
         return 1;
     }

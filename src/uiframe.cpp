@@ -5,16 +5,10 @@
 #include "uiframe.hpp"
 
 namespace meorawr::hyjal {
-    UiFrame::UiFrame(std::string_view name, UiFrame* parent)
-        : UiObject(name)
-        , _parent(parent)
+    UiFrame::UiFrame(std::string_view name, UiObject* parent)
+        : UiObject(name, parent)
     {
     }
 
     UiFrame::~UiFrame() noexcept = default;
-
-    UiFrame* UiFrame::get_parent() const noexcept
-    {
-        return _parent;
-    }
 }

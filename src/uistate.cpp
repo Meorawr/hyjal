@@ -8,7 +8,8 @@
 
 namespace meorawr::hyjal {
     UiState::UiState(lua_State* L)
-        : _L(L)
+        : UiObject({}, nullptr)
+        , _L(L)
     {
     }
 
