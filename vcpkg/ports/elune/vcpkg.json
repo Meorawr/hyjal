@@ -1,6 +1,6 @@
 {
   "name": "elune",
-  "version-string": "325632b",
+  "version-string": "462e4d5",
   "description": "Lua 5.1 with support for World of Warcraft-style tainted execution",
   "homepage": "https://github.com/Meorawr/elune",
   "license": "MIT",
