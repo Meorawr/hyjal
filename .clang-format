@@ -5,6 +5,8 @@ Standard: c++20
 Cpp11BracedListStyle: true
 NamespaceIndentation: All
 IndentExternBlock: Indent
+IndentRequiresClause: false
+RequiresClausePosition: WithPreceding
 SpaceBeforeCpp11BracedList: false
 SpaceAfterTemplateKeyword: false
 
