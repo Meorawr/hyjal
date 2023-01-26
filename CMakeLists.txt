@@ -137,29 +137,6 @@ target_sources(
 )
 
 ##
-## Tests
-##
-
-if(BUILD_TESTING)
-  add_executable(hyjal_tests)
-  add_executable(hyjal::tests ALIAS hyjal_tests)
-
-  target_link_libraries(
-    hyjal_tests
-    PRIVATE
-      hyjal::config
-      hyjal::hyjal
-      elune::liblua
-  )
-
-  target_sources(
-    hyjal_tests
-    PRIVATE
-      "test/test.cpp"
- )
-endif()
-
-##
 ## Installation and Packaging
 ##
 
