@@ -137,6 +137,7 @@ target_sources(
     "src/child_list_view.hpp"
     "src/hyjal.cpp"
     "src/intrusive_list_node.hpp"
+    "src/object_base.hpp"
     "src/object_list.hpp"
     "src/object_list_hook.hpp"
     "src/object_list_node.hpp"
