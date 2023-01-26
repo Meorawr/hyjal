@@ -129,6 +129,12 @@ target_sources(
     FILES
       "include/meorawr/hyjal/hyjal.hpp"
   PRIVATE
+    "src/child_list.hpp"
+    "src/child_list_hook.hpp"
+    "src/child_list_node.hpp"
+    "src/child_list_traits.hpp"
+    "src/child_list_value_traits.hpp"
+    "src/child_list_view.hpp"
     "src/hyjal.cpp"
     "src/intrusive_list_node.hpp"
     "src/object_list.hpp"
