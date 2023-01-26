@@ -3,6 +3,7 @@
   "name": "hyjal",
   "version-string": "dev",
   "dependencies": [
+    "boost-intrusive",
     "elune",
     "fmt"
   ]

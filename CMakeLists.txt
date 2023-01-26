@@ -39,6 +39,7 @@ set(CMAKE_PDB_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} CACHE PATH "Out
 set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<CONFIG:Debug>,EditAndContinue,ProgramDatabase>" CACHE STRING "Debug information format for MSVC compilations")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" CACHE STRING "Runtime library to link against for MSVC compilations")
 
+find_package(Boost REQUIRED)
 find_package(elune CONFIG REQUIRED COMPONENTS liblua)
 find_package(fmt CONFIG REQUIRED)
 
@@ -114,6 +115,7 @@ target_link_libraries(
   hyjal
   PRIVATE
     hyjal::config
+    Boost::boost
     elune::liblua
     fmt::fmt
 )
