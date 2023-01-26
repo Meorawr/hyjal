@@ -131,6 +131,12 @@ target_sources(
   PRIVATE
     "src/hyjal.cpp"
     "src/intrusive_list_node.hpp"
+    "src/object_list.hpp"
+    "src/object_list_hook.hpp"
+    "src/object_list_node.hpp"
+    "src/object_list_traits.hpp"
+    "src/object_list_value_traits.hpp"
+    "src/object_list_view.hpp"
 )
 
 ##
