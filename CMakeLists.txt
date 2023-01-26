@@ -130,6 +130,7 @@ target_sources(
       "include/meorawr/hyjal/hyjal.hpp"
   PRIVATE
     "src/hyjal.cpp"
+    "src/intrusive_list_node.hpp"
 )
 
 ##
