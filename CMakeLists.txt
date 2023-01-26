@@ -144,6 +144,9 @@ target_sources(
     "src/object_list_traits.hpp"
     "src/object_list_value_traits.hpp"
     "src/object_list_view.hpp"
+    "src/ui_type_id.hpp"
+    "src/ui_type_info.hpp"
+    "src/ui_type_traits.hpp"
 )
 
 ##
