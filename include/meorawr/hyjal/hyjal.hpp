@@ -28,7 +28,8 @@
 #define HYJAL_API
 #endif
 
-namespace meorawr::hyjal {
+extern "C" {
+    HYJAL_API int luaopen_hyjal(struct lua_State* L) noexcept;
 }
 
 #endif
