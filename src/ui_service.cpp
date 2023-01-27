@@ -50,7 +50,9 @@ namespace meorawr::hyjal {
 
     void ui_service::deallocate_object(void* ptr, const ui_type_info& type) noexcept
     {
-        return object_memory_resource_.deallocate(ptr, type.size_of(), type.align_of());
+        if (ptr) {
+            object_memory_resource_.deallocate(ptr, type.size_of(), type.align_of());
+        }
     }
 
     void ui_service::link_object(animation& animation) noexcept
