@@ -33,10 +33,10 @@ namespace meorawr::hyjal {
 
         lua_State* lua_state() const noexcept;
 
-        object_list_view<animation> animations() const noexcept;
-        object_list_view<object> objects() const noexcept;
-        object_list_view<frame> frames() const noexcept;
-        object_list_view<font> fonts() const noexcept;
+        object_list_view<animation> animations() const& noexcept;
+        object_list_view<object> objects() const& noexcept;
+        object_list_view<frame> frames() const& noexcept;
+        object_list_view<font> fonts() const& noexcept;
 
         void* allocate_object(const ui_type_info& type);
         void deallocate_object(void* ptr, const ui_type_info& type) noexcept;

@@ -23,22 +23,22 @@ namespace meorawr::hyjal {
         return L;
     }
 
-    object_list_view<animation> ui_service::animations() const noexcept
+    object_list_view<animation> ui_service::animations() const& noexcept
     {
         return const_cast<object_list<animation>&>(animations_);
     }
 
-    object_list_view<object> ui_service::objects() const noexcept
+    object_list_view<object> ui_service::objects() const& noexcept
     {
         return const_cast<object_list<object>&>(objects_);
     }
 
-    object_list_view<frame> ui_service::frames() const noexcept
+    object_list_view<frame> ui_service::frames() const& noexcept
     {
         return const_cast<object_list<frame>&>(frames_);
     }
 
-    object_list_view<font> ui_service::fonts() const noexcept
+    object_list_view<font> ui_service::fonts() const& noexcept
     {
         return const_cast<object_list<font>&>(fonts_);
     }
