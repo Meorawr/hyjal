@@ -11,13 +11,22 @@ namespace meorawr::hyjal {
     class ui_type_info {
     public:
         template<ui_type T>
-        constexpr ui_type_info(std::type_identity<T>) noexcept;
+        constexpr ui_type_info(std::type_identity<T>) noexcept
+            : id_(ui_type_traits<T>::type_id)
+            , name_(ui_type_traits<T>::type_name)
+            , align_(alignof(T))
+            , size_(sizeof(T))
+            , derives_from_(generate_derivation_predicate(ui_derived_types_t<T>{}))
+        {
+        }
 
-        constexpr ui_type_id id() const noexcept;
-        constexpr std::string_view name() const noexcept;
+        constexpr ui_type_id id() const noexcept { return id_; }
+        constexpr std::string_view name() const noexcept { return name_; }
+        constexpr std::size_t align_of() const noexcept { return align_; }
+        constexpr std::size_t size_of() const noexcept { return size_; }
 
-        constexpr bool derives_from(const ui_type_info& other) const noexcept;
-        constexpr bool same_as(const ui_type_info& other) const noexcept;
+        constexpr bool derives_from(const ui_type_info& other) const noexcept { return id_ == other.id_ || derives_from_(other.id_); }
+        constexpr bool same_as(const ui_type_info& other) const noexcept { return id_ == other.id_; }
 
     private:
         using derivation_predicate = bool (*)(ui_type_id) noexcept;
@@ -27,39 +36,13 @@ namespace meorawr::hyjal {
 
         ui_type_id id_;
         std::string_view name_;
+        std::size_t align_;
+        std::size_t size_;
         derivation_predicate derives_from_;
     };
 
     template<ui_type T>
     inline constexpr const ui_type_info& ui_type_info_v = {std::type_identity<T>{}};
-
-    template<ui_type T>
-    constexpr ui_type_info::ui_type_info(std::type_identity<T>) noexcept
-        : id_(ui_type_traits<T>::type_id)
-        , name_(ui_type_traits<T>::type_name)
-        , derives_from_(generate_derivation_predicate(ui_derived_types_t<T>{}))
-    {
-    }
-
-    constexpr ui_type_id ui_type_info::id() const noexcept
-    {
-        return id_;
-    }
-
-    constexpr std::string_view ui_type_info::name() const noexcept
-    {
-        return name_;
-    }
-
-    constexpr bool ui_type_info::derives_from(const ui_type_info& other) const noexcept
-    {
-        return id_ == other.id_ || derives_from_(other.id_);
-    }
-
-    constexpr bool ui_type_info::same_as(const ui_type_info& other) const noexcept
-    {
-        return id_ == other.id_;
-    }
 
     template<typename... Bases>
     static constexpr auto ui_type_info::generate_derivation_predicate(boost::mp11::mp_list<Bases...>) noexcept -> derivation_predicate
