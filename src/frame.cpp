@@ -37,8 +37,8 @@ namespace meorawr::hyjal {
 
     frame::~frame() noexcept
     {
-        regions_.clear_and_dispose(delete_object<region>);
-        frames_.clear_and_dispose(delete_object<frame>);
+        regions_.clear_and_dispose(delete_object);
+        frames_.clear_and_dispose(delete_object);
     }
 
     child_list_view<frame> frame::frames() const noexcept

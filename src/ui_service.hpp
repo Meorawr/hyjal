@@ -125,13 +125,5 @@ namespace meorawr::hyjal {
         return ptr.release();
     }
 
-    template<std::derived_from<object> T>
-    void delete_object(T* ptr) noexcept
-    {
-        ui_service& ui = ptr->owner();
-        const ui_type_info& type = ptr->type();
-
-        ptr->~T();
-        ui.deallocate_object(ptr, type);
-    }
+    void delete_object(object* ptr) noexcept;
 }

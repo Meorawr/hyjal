@@ -12,7 +12,7 @@ namespace meorawr::hyjal {
 
     animatable_object::~animatable_object() noexcept
     {
-        groups_.clear_and_dispose(delete_object<animation_group>);
+        groups_.clear_and_dispose(delete_object);
     }
 
     child_list_view<animation_group> animatable_object::animation_groups() const noexcept

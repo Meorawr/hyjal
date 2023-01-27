@@ -72,4 +72,15 @@ namespace meorawr::hyjal {
     {
         objects_.push_back(object);
     }
+
+    void delete_object(object* ptr) noexcept
+    {
+        if (ptr) {
+            ui_service& ui = ptr->owner();
+            const ui_type_info& type = ptr->type();
+
+            ptr->~object();
+            ui.deallocate_object(ptr, type);
+        }
+    }
 }
