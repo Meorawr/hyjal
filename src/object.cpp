@@ -7,23 +7,6 @@
 #include "ui_service.hpp"
 
 namespace meorawr::hyjal {
-    void* object::operator new(std::size_t size, ui_service& ui, allocation_info&& info)
-    {
-        return operator new(size, static_cast<std::align_val_t>(alignof(max_align_t)), ui, std::move(info));
-    }
-
-    void* object::operator new(std::size_t size, std::align_val_t align, ui_service& ui, allocation_info&& info)
-    {
-        info.size = size;
-        info.align = static_cast<std::size_t>(align);
-        return ui.object_memory_resource()->allocate(info.size, info.align);
-    }
-
-    void object::operator delete(void* ptr, ui_service& ui, allocation_info&& info) noexcept
-    {
-        ui.object_memory_resource()->deallocate(ptr, info.size, info.align);
-    }
-
     object::object(std::string_view name, ui_service& owner)
         : object(name, ui_type_info_v<object>, owner)
     {

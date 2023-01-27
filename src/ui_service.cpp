@@ -23,11 +23,6 @@ namespace meorawr::hyjal {
         return L;
     }
 
-    std::pmr::memory_resource* ui_service::object_memory_resource() noexcept
-    {
-        return &object_memory_resource_;
-    }
-
     object_list_view<animation> ui_service::animations() const noexcept
     {
         return const_cast<object_list<animation>&>(animations_);
@@ -46,6 +41,16 @@ namespace meorawr::hyjal {
     object_list_view<font> ui_service::fonts() const noexcept
     {
         return const_cast<object_list<font>&>(fonts_);
+    }
+
+    void* ui_service::allocate_object(const ui_type_info& type)
+    {
+        return object_memory_resource_.allocate(type.size_of(), type.align_of());
+    }
+
+    void ui_service::deallocate_object(void* ptr, const ui_type_info& type) noexcept
+    {
+        return object_memory_resource_.deallocate(ptr, type.size_of(), type.align_of());
     }
 
     void ui_service::link_object(animation& animation) noexcept

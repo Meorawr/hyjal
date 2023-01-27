@@ -12,14 +12,7 @@
 
 namespace meorawr::hyjal {
     class object : public virtual object_base, public object_list_hook<object> {
-        struct allocation_info;
-
     public:
-        static void* operator new(std::size_t size, ui_service& ui, allocation_info&& info = {});
-        static void* operator new(std::size_t size, std::align_val_t align, ui_service& ui, allocation_info&& info = {});
-
-        static void operator delete(void* ptr, ui_service& ui, allocation_info&& info) noexcept;
-
         object(std::string_view name, ui_service& owner);
         object(const object&) = delete;
         object(object&&) = delete;

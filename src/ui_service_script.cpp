@@ -16,7 +16,7 @@ namespace meorawr::hyjal {
     static int create_font(lua_State* L, ui_service& ui)
     {
         std::string_view name = lua_checkstringview(L, 1);
-        lua_pushscriptobject(L, *new (ui) font(name, ui));
+        lua_pushscriptobject(L, *new_object<font>(ui, name));
         return 1;
     }
 
@@ -31,9 +31,9 @@ namespace meorawr::hyjal {
         frame* f;
 
         if (parent) {
-            f = new (ui) frame(name, *parent);
+            f = new_object<frame>(ui, name, *parent);
         } else {
-            f = new (ui) frame(name, ui);
+            f = new_object<frame>(ui, name);
         }
 
         lua_pushscriptobject(L, *f);

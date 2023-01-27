@@ -7,6 +7,8 @@
 #include "object_list.hpp"
 #include "object_list_traits.hpp"
 #include "object_list_view.hpp"
+#include "ui_type_info.hpp"
+#include "ui_type_traits.hpp"
 
 #include <memory_resource>
 
@@ -30,12 +32,14 @@ namespace meorawr::hyjal {
         ~ui_service() noexcept;
 
         lua_State* lua_state() const noexcept;
-        std::pmr::memory_resource* object_memory_resource() noexcept;
 
         object_list_view<animation> animations() const noexcept;
         object_list_view<object> objects() const noexcept;
         object_list_view<frame> frames() const noexcept;
         object_list_view<font> fonts() const noexcept;
+
+        void* allocate_object(const ui_type_info& type);
+        void deallocate_object(void* ptr, const ui_type_info& type) noexcept;
 
     private:
         void link_object(animation& animation) noexcept;
@@ -56,78 +60,78 @@ namespace meorawr::hyjal {
         friend object_list_traits<object>;
     };
 
-    // TODO: Currently the lifetime management of object isn't the nicest and
-    //       we've got a few (somewhat conflicting) assumptions in places.
+    template<ui_type T>
+    T* allocate_object(ui_service& ui)
+    {
+        return static_cast<T*>(ui.allocate_object(ui_type_info_v<T>));
+    }
+
+    template<ui_type T>
+    void deallocate_object(ui_service& ui, T* ptr) noexcept
+    {
+        ui.deallocate_object(ptr, ui_type_info_v<T>);
+    }
+
+    // TODO: Constructor arguments are a bit awkward at the minute resulting
+    //       in two new_object overloads being provided here.
     //
-    //       These free functions below were the initial point through which
-    //       objects were intended to be created. Later, operator new/delete
-    //       support with placement-style syntax was added to the object class
-    //       to allow a more succinct 'new (ui) object_type(...)' expression
-    //       to be used.
+    //       The main issue is that some object types allow construction
+    //       with either an explicit ui_service& owner parameter -or- an
+    //       inferred one from a parent. In some cases, the owner-based
+    //       overload also doesn't exist.
     //
-    //       Elsewhere, various child_lists assume objects are allocated
-    //       on the heap through the object memory resource in the UI state.
+    //       We could remove the parent-based constructors, however that
+    //       impacts some (admittedly script-facing) invariants whereby
+    //       it isn't possible to - for example - reassign texture regions
+    //       to a nil parent. As such the member functions of those types
+    //       reflect that by taking a reference to the parent rather than
+    //       a potentially-null pointer.
     //
-    //       Both the placement-style new and these functions below work fine
-    //       with that heap allocation assumption for child_list management,
-    //       however we haven't explicitly deleted other overloads for new
-    //       that could allow putting objects _outside_ of the object pool
-    //       and into the general heap -or- directly creating them on the
-    //       stack.
+    //       Alternatively we allow specifying both the parent -and- the
+    //       owner for those constructors, however this is leads to another
+    //       awkward situation whereby it would become possible to in effect
+    //       attach an object created through ui_service as the child of
+    //       an object created through a different ui_service.
     //
-    //       As such a few decisions need to be made;
-    //
-    //         1. With the placement-style syntax should these free functions
-    //            continue to exist?
-    //
-    //         2. Do we disallow general heap allocation of objects? Note that
-    //            we can't solve the stack allocation problem however.
-    //
-    //         3. Should objects gain support for a custom deallocator,
-    //            to be called through a destructing-delete overload of
-    //            operator delete?
-    //
-    //         4. Should we instead move objects to a PIMPL-style system
-    //            whereby the 'object' types hold a non-owning pointer to the
-    //            actual data, and use this to move the allocation away from
-    //            the caller?
-    //
-    //       An initial design of the library did use PIMPL however it was
-    //       scrapped due to the maintenance overhead - having to effectively
-    //       duplicate parts of the public interface to the private one is
-    //       awkward and attaching value-like semantics to the public types
-    //       doesn't make much sense given objects aren't really "values".
-    //
-    //       Disallowing general heap allocations might solve a potential
-    //       footgun (what if we accidentally forget the '(ui)'?), but there's
-    //       probably some value in not requiring that *all* objects live in
-    //       the pool.
-    //
-    //       Allowing a custom deallocator function to be attached to objects
-    //       is probably the best route; worst case it'll just be the size of
-    //       two pointers but objects aren't exactly going to be lightweight
-    //       allocations numbering in the hundreds of thousands anyway.
+    //       Technically speaking nothing is preventing a set_parent call
+    //       from also doing something similar though, so maybe just a runtime
+    //       check that 'parent.owner() == owner()' would be enough?
 
     template<std::derived_from<object> T, typename... Args>
     requires std::constructible_from<T, Args...>
     T* new_object(ui_service& ui, Args&&... args)
     {
-        std::pmr::polymorphic_allocator allocator(ui.object_memory_resource());
-        return allocator.new_object<T>(std::forward<Args>(args)...);
+        const auto deleter = [&](T* ptr) noexcept { deallocate_object(ui, ptr); };
+
+        using deleter_type = decltype(deleter);
+        using pointer_type = std::unique_ptr<T, deleter_type>;
+
+        pointer_type ptr(allocate_object<T>(ui), deleter);
+        new (ptr.get()) T(std::forward<Args>(args)...);
+        return ptr.release();
     }
 
     template<std::derived_from<object> T, typename... Args>
     requires std::constructible_from<T, Args..., ui_service&>
     T* new_object(ui_service& ui, Args&&... args)
     {
-        std::pmr::polymorphic_allocator allocator(ui.object_memory_resource());
-        return allocator.new_object<T>(std::forward<Args>(args)..., ui);
+        const auto deleter = [&](T* ptr) noexcept { deallocate_object(ui, ptr); };
+
+        using deleter_type = decltype(deleter);
+        using pointer_type = std::unique_ptr<T, deleter_type>;
+
+        pointer_type ptr(allocate_object<T>(ui), deleter);
+        new (ptr.get()) T(std::forward<Args>(args)..., ui);
+        return ptr.release();
     }
 
     template<std::derived_from<object> T>
-    void delete_object(T* object)
+    void delete_object(T* ptr) noexcept
     {
-        std::pmr::polymorphic_allocator allocator(object->owner().object_memory_resource());
-        allocator.delete_object<T>(object);
+        ui_service& ui = ptr->owner();
+        const ui_type_info& type = ptr->type();
+
+        ptr->~T();
+        ui.deallocate_object(ptr, type);
     }
 }
