@@ -16,7 +16,10 @@ namespace meorawr::hyjal {
     {
     }
 
-    ui_service::~ui_service() noexcept = default;
+    ui_service::~ui_service() noexcept
+    {
+        objects_.clear_and_dispose(delete_object);
+    }
 
     lua_State* ui_service::lua_state() const noexcept
     {
