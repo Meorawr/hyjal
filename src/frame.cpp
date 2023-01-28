@@ -41,12 +41,12 @@ namespace meorawr::hyjal {
         frames_.clear_and_dispose(delete_object);
     }
 
-    child_list_view<frame> frame::frames() const noexcept
+    child_list_view<frame> frame::frames() const& noexcept
     {
         return const_cast<child_list<frame>&>(frames_);
     }
 
-    child_list_view<region> frame::regions() const noexcept
+    child_list_view<region> frame::regions() const& noexcept
     {
         return const_cast<child_list<region>&>(regions_);
     }

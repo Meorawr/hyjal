@@ -27,8 +27,8 @@ namespace meorawr::hyjal {
 
         ~frame() noexcept override;
 
-        child_list_view<frame> frames() const noexcept;
-        child_list_view<region> regions() const noexcept;
+        child_list_view<frame> frames() const& noexcept;
+        child_list_view<region> regions() const& noexcept;
         frame* parent() const noexcept;
 
         void set_parent(frame* parent);

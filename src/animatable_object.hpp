@@ -20,7 +20,7 @@ namespace meorawr::hyjal {
         animatable_object& operator=(const animatable_object&) = delete;
         animatable_object& operator=(animatable_object&&) = delete;
 
-        child_list_view<animation_group> animation_groups() const noexcept;
+        child_list_view<animation_group> animation_groups() const& noexcept;
 
     protected:
         animatable_object() noexcept;

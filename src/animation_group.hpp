@@ -25,7 +25,7 @@ namespace meorawr::hyjal {
 
         ~animation_group() noexcept override;
 
-        child_list_view<animation> animations() const noexcept;
+        child_list_view<animation> animations() const& noexcept;
         animatable_object& parent() const noexcept;
 
         void set_parent(animatable_object& parent);
