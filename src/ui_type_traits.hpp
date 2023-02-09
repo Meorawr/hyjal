@@ -10,8 +10,6 @@
 
 #include <boost/mp11/mpl_list.hpp>
 
-struct lua_State;
-
 namespace meorawr::hyjal {
     template<typename T>
     struct ui_type_traits;
@@ -26,7 +24,7 @@ namespace meorawr::hyjal {
     // clang-format off
 
     template<typename T>
-    concept ui_type = requires(lua_State *L) {
+    concept ui_type = requires {
         { ui_type_traits<T>::type_id } -> std::convertible_to<ui_type_id>;
         { ui_type_traits<T>::type_name } -> std::convertible_to<std::string_view>;    
     };

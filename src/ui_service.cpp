@@ -10,8 +10,8 @@
 #include "object.hpp"
 
 namespace meorawr::hyjal {
-    ui_service::ui_service(lua_State* L, std::pmr::memory_resource* resource)
-        : L(L)
+    ui_service::ui_service(lua::state_view L, std::pmr::memory_resource* resource)
+        : state_(L)
         , object_memory_resource_(resource)
     {
     }
@@ -21,9 +21,9 @@ namespace meorawr::hyjal {
         objects_.clear_and_dispose(delete_object);
     }
 
-    lua_State* ui_service::lua_state() const noexcept
+    lua::state_view ui_service::lua_state() const noexcept
     {
-        return L;
+        return state_;
     }
 
     object_list_view<animation> ui_service::animations() const& noexcept

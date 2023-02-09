@@ -147,6 +147,7 @@ target_sources(
     "src/font.hpp"
     "src/frame.cpp"
     "src/frame.hpp"
+    "src/lua/state_view.hpp"
     "src/object.cpp"
     "src/object.hpp"
     "src/object_base.hpp"

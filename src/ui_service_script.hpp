@@ -4,8 +4,8 @@
 
 #pragma once
 
-struct lua_State;
+#include "lua/state_view.hpp"
 
 namespace meorawr::hyjal {
-    void register_script_functions(lua_State* L, class ui_service& ui);
+    void register_script_functions(lua::state_view L, class ui_service& ui);
 }

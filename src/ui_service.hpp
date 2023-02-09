@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "lua/state_view.hpp"
 #include "object_list.hpp"
 #include "object_list_traits.hpp"
 #include "object_list_view.hpp"
@@ -11,8 +12,6 @@
 #include "ui_type_traits.hpp"
 
 #include <memory_resource>
-
-struct lua_State;
 
 namespace meorawr::hyjal {
     class animation;
@@ -22,7 +21,7 @@ namespace meorawr::hyjal {
 
     class ui_service {
     public:
-        ui_service(lua_State* L, std::pmr::memory_resource* resource);
+        ui_service(lua::state_view L, std::pmr::memory_resource* resource);
         ui_service(const ui_service&) = delete;
         ui_service(ui_service&&) = delete;
 
@@ -31,7 +30,7 @@ namespace meorawr::hyjal {
 
         ~ui_service() noexcept;
 
-        lua_State* lua_state() const noexcept;
+        lua::state_view lua_state() const noexcept;
 
         object_list_view<animation> animations() const& noexcept;
         object_list_view<object> objects() const& noexcept;
@@ -47,7 +46,7 @@ namespace meorawr::hyjal {
         void link_object(frame& frame) noexcept;
         void link_object(object& object) noexcept;
 
-        lua_State* L;
+        lua::state_view state_;
         std::pmr::unsynchronized_pool_resource object_memory_resource_;
         object_list<object> objects_;
         object_list<frame> frames_;

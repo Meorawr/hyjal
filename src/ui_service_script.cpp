@@ -6,6 +6,7 @@
 
 #include "font.hpp"
 #include "frame.hpp"
+#include "lua/state_view.hpp"
 #include "object.hpp"
 #include "script_util.hpp"
 #include "ui_service.hpp"
@@ -151,7 +152,7 @@ namespace meorawr::hyjal {
         return luaL_error(L, "%s", ex.what());
     }
 
-    void register_script_functions(lua_State* L, class ui_service& ui)
+    void register_script_functions(lua::state_view L, class ui_service& ui)
     {
         static luaL_Reg script_functions[] = {
             {.name = "CreateFont", .func = invoke_script_function<create_font>},
