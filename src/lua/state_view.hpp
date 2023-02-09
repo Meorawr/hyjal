@@ -14,6 +14,7 @@ namespace meorawr::hyjal::lua {
     class state_view {
     public:
         constexpr state_view(state_t state) noexcept;
+        constexpr state_view(std::nullptr_t) noexcept = delete;
 
         constexpr operator state_t() const noexcept;
 
