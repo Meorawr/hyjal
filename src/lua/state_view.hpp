@@ -27,17 +27,17 @@ namespace meorawr::hyjal::lua {
 
         // Stack iterators
 
-        constexpr iterator begin() const noexcept;
-        constexpr stack_top_sentinel end() const noexcept;
+        iterator begin() const noexcept;
+        stack_top_sentinel end() const noexcept;
         reverse_iterator rbegin() const noexcept;
-        constexpr stack_base_sentinel rend() const noexcept;
+        stack_base_sentinel rend() const noexcept;
 
         // Stack element accessors
 
-        constexpr stack_reference operator[](stack_index index) const noexcept;
-        constexpr stack_reference at(stack_index index) const noexcept;
-        constexpr stack_reference top() const noexcept;
-        constexpr stack_reference base() const noexcept;
+        stack_reference operator[](stack_index index) const noexcept;
+        stack_reference at(stack_index index) const noexcept;
+        stack_reference top() const noexcept;
+        stack_reference base() const noexcept;
 
         // Non-member functions
 
@@ -57,12 +57,12 @@ namespace meorawr::hyjal::lua {
         return state_;
     }
 
-    constexpr state_view::iterator state_view::begin() const noexcept
+    state_view::iterator state_view::begin() const noexcept
     {
         return iterator(state_, base_index);
     }
 
-    constexpr stack_top_sentinel state_view::end() const noexcept
+    stack_top_sentinel state_view::end() const noexcept
     {
         return {};
     }
@@ -72,27 +72,27 @@ namespace meorawr::hyjal::lua {
         return std::reverse_iterator(iterator(state_, top_index));
     }
 
-    constexpr stack_base_sentinel state_view::rend() const noexcept
+    stack_base_sentinel state_view::rend() const noexcept
     {
         return {};
     }
 
-    constexpr stack_reference state_view::operator[](stack_index index) const noexcept
+    stack_reference state_view::operator[](stack_index index) const noexcept
     {
         return stack_reference(state_, index);
     }
 
-    constexpr stack_reference state_view::at(stack_index index) const noexcept
+    stack_reference state_view::at(stack_index index) const noexcept
     {
         return stack_reference(state_, index);
     }
 
-    constexpr stack_reference state_view::top() const noexcept
+    stack_reference state_view::top() const noexcept
     {
         return stack_reference(state_, top_index);
     }
 
-    constexpr stack_reference state_view::base() const noexcept
+    stack_reference state_view::base() const noexcept
     {
         return stack_reference(state_, base_index);
     }
