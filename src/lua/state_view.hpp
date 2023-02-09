@@ -4,13 +4,13 @@
 
 #pragma once
 
+#include "state.hpp"
+
 #include <lua.hpp>
 
 #include <utility>
 
 namespace meorawr::hyjal::lua {
-    using state_t = lua_State*;
-
     class state_view {
     public:
         constexpr state_view(state_t state) noexcept;
