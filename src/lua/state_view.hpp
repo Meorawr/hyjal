@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "stack_algorithms.hpp"
 #include "stack_index.hpp"
 #include "stack_iterator.hpp"
 #include "stack_reference.hpp"
@@ -107,12 +108,12 @@ namespace meorawr::hyjal::lua {
 
     inline bool state_view::empty() const noexcept
     {
-        return lua_gettop(state_) == 0;
+        return stack_algorithms::empty(state_);
     }
 
     inline state_view::size_type state_view::size() const noexcept
     {
-        return lua_gettop(state_);
+        return stack_algorithms::size(state_);
     }
 
     inline constexpr state_view::size_type state_view::max_size() const noexcept

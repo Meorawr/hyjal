@@ -150,6 +150,7 @@ target_sources(
     "src/lua/index.hpp"
     "src/lua/pseudo_index.hpp"
     "src/lua/raw_index.hpp"
+    "src/lua/stack_algorithms.hpp"
     "src/lua/stack_index.hpp"
     "src/lua/stack_iterator.hpp"
     "src/lua/stack_reference.hpp"

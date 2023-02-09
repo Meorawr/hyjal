@@ -5,6 +5,7 @@
 #pragma once
 
 #include "index.hpp"
+#include "stack_algorithms.hpp"
 #include "stack_index.hpp"
 #include "stack_reference.hpp"
 #include "state.hpp"
@@ -230,7 +231,7 @@ namespace meorawr::hyjal::lua {
         if (iter.state_ == nullptr) [[unlikely]] {
             return true;
         } else {
-            return iter.index_ < 1 || iter.index_ > lua_gettop(iter.state_);
+            return iter.index_ < 1 || iter.index_ > stack_algorithms::size(iter.state_);
         }
     }
 
@@ -244,7 +245,7 @@ namespace meorawr::hyjal::lua {
         if (iter.state_ == nullptr) [[unlikely]] {
             return true;
         } else {
-            return iter.index_ > lua_gettop(iter.state_);
+            return iter.index_ > stack_algorithms::size(iter.state_);
         }
     }
 
@@ -263,7 +264,7 @@ namespace meorawr::hyjal::lua {
         if (iter.state_ == nullptr) [[unlikely]] {
             return 0;
         } else {
-            return iter.index_ - lua_gettop(iter.state_) + 1;
+            return iter.index_ - stack_algorithms::size(iter.state_) + 1;
         }
     }
 
@@ -272,7 +273,7 @@ namespace meorawr::hyjal::lua {
         if (iter.state_ == nullptr) [[unlikely]] {
             return 0;
         } else {
-            return lua_gettop(iter.state_) - iter.index_ + 1;
+            return stack_algorithms::size(iter.state_) - iter.index_ + 1;
         }
     }
 

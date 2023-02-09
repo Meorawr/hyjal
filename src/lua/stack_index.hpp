@@ -5,6 +5,7 @@
 #pragma once
 
 #include "index.hpp"
+#include "stack_algorithms.hpp"
 
 #include <lua.hpp>
 
@@ -30,8 +31,8 @@ namespace meorawr::hyjal::lua {
 
         constexpr absolute_index() noexcept = default;
         consteval absolute_index(integral_index auto i) noexcept;
-        absolute_index(lua_State* L, integral_index auto i) noexcept;
-        absolute_index(lua_State* L, compatible_index<stack_index_category> auto i) noexcept;
+        absolute_index(state_t state, integral_index auto i) noexcept;
+        absolute_index(state_t state, compatible_index<stack_index_category> auto i) noexcept;
 
         constexpr operator index_t() const noexcept { return i; }
 
@@ -43,8 +44,8 @@ namespace meorawr::hyjal::lua {
 
         constexpr relative_index() noexcept = default;
         consteval relative_index(integral_index auto i) noexcept;
-        relative_index(lua_State* L, integral_index auto i) noexcept;
-        relative_index(lua_State* L, compatible_index<stack_index_category> auto i) noexcept;
+        relative_index(state_t state, integral_index auto i) noexcept;
+        relative_index(state_t state, compatible_index<stack_index_category> auto i) noexcept;
 
         constexpr operator index_t() const noexcept { return i; }
 
@@ -66,13 +67,13 @@ namespace meorawr::hyjal::lua {
     {
     }
 
-    absolute_index::absolute_index(lua_State* L, integral_index auto i) noexcept
-        : i((i < 0) ? i : lua_absindex(L, i))
+    absolute_index::absolute_index(state_t state, integral_index auto i) noexcept
+        : i((i < 0) ? i : stack_algorithms::absolute_index(state, i))
     {
     }
 
-    absolute_index::absolute_index(lua_State* L, compatible_index<stack_index_category> auto i) noexcept
-        : absolute_index(L, static_cast<index_t>(i))
+    absolute_index::absolute_index(state_t state, compatible_index<stack_index_category> auto i) noexcept
+        : absolute_index(state, static_cast<index_t>(i))
     {
     }
 
@@ -81,13 +82,13 @@ namespace meorawr::hyjal::lua {
     {
     }
 
-    relative_index::relative_index(lua_State* L, integral_index auto i) noexcept
-        : i((i < 0) ? i : -(lua_gettop(L) - i + 1))
+    relative_index::relative_index(state_t state, integral_index auto i) noexcept
+        : i((i < 0) ? i : stack_algorithms::relative_index(state, i))
     {
     }
 
-    relative_index::relative_index(lua_State* L, compatible_index<stack_index_category> auto i) noexcept
-        : relative_index(L, static_cast<index_t>(i))
+    relative_index::relative_index(state_t state, compatible_index<stack_index_category> auto i) noexcept
+        : relative_index(state, static_cast<index_t>(i))
     {
     }
 
