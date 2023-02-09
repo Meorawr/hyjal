@@ -151,6 +151,7 @@ target_sources(
     "src/lua/pseudo_index.hpp"
     "src/lua/raw_index.hpp"
     "src/lua/stack_index.hpp"
+    "src/lua/stack_reference.hpp"
     "src/lua/state.hpp"
     "src/lua/state_view.hpp"
     "src/lua/upvalue_index.hpp"
