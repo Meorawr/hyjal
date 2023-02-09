@@ -17,6 +17,8 @@
 namespace meorawr::hyjal::lua {
     class state_view {
     public:
+        using size_type = index_size_t;
+        using difference_type = index_difference_t;
         using iterator = stack_iterator;
         using reverse_iterator = std::reverse_iterator<stack_iterator>;
 
@@ -38,6 +40,12 @@ namespace meorawr::hyjal::lua {
         stack_reference at(stack_index index) const noexcept;
         stack_reference top() const noexcept;
         stack_reference base() const noexcept;
+
+        // Stack capacity
+
+        bool empty() const noexcept;
+        size_type size() const noexcept;
+        constexpr size_type max_size() const noexcept;
 
         // Non-member functions
 
@@ -95,6 +103,21 @@ namespace meorawr::hyjal::lua {
     inline stack_reference state_view::base() const noexcept
     {
         return stack_reference(state_, base_index);
+    }
+
+    inline bool state_view::empty() const noexcept
+    {
+        return lua_gettop(state_) == 0;
+    }
+
+    inline state_view::size_type state_view::size() const noexcept
+    {
+        return lua_gettop(state_);
+    }
+
+    inline constexpr state_view::size_type state_view::max_size() const noexcept
+    {
+        return LUAI_MAXCSTACK;
     }
 
     constexpr void swap(state_view& a, state_view& b) noexcept
