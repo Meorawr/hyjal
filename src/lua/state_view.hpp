@@ -5,20 +5,32 @@
 #pragma once
 
 #include "stack_index.hpp"
+#include "stack_iterator.hpp"
 #include "stack_reference.hpp"
 #include "state.hpp"
 
 #include <lua.hpp>
 
+#include <iterator>
 #include <utility>
 
 namespace meorawr::hyjal::lua {
     class state_view {
     public:
+        using iterator = stack_iterator;
+        using reverse_iterator = std::reverse_iterator<stack_iterator>;
+
         constexpr state_view(state_t state) noexcept;
         constexpr state_view(std::nullptr_t) noexcept = delete;
 
         constexpr operator state_t() const noexcept;
+
+        // Stack iterators
+
+        constexpr iterator begin() const noexcept;
+        constexpr stack_top_sentinel end() const noexcept;
+        reverse_iterator rbegin() const noexcept;
+        constexpr stack_base_sentinel rend() const noexcept;
 
         // Stack element accessors
 
@@ -43,6 +55,26 @@ namespace meorawr::hyjal::lua {
     constexpr state_view::operator state_t() const noexcept
     {
         return state_;
+    }
+
+    constexpr state_view::iterator state_view::begin() const noexcept
+    {
+        return iterator(state_, base_index);
+    }
+
+    constexpr stack_top_sentinel state_view::end() const noexcept
+    {
+        return {};
+    }
+
+    state_view::reverse_iterator state_view::rbegin() const noexcept
+    {
+        return std::reverse_iterator(iterator(state_, top_index));
+    }
+
+    constexpr stack_base_sentinel state_view::rend() const noexcept
+    {
+        return {};
     }
 
     constexpr stack_reference state_view::operator[](stack_index index) const noexcept
