@@ -57,42 +57,42 @@ namespace meorawr::hyjal::lua {
         return state_;
     }
 
-    state_view::iterator state_view::begin() const noexcept
+    inline state_view::iterator state_view::begin() const noexcept
     {
         return iterator(state_, base_index);
     }
 
-    stack_top_sentinel state_view::end() const noexcept
+    inline stack_top_sentinel state_view::end() const noexcept
     {
         return {};
     }
 
-    state_view::reverse_iterator state_view::rbegin() const noexcept
+    inline state_view::reverse_iterator state_view::rbegin() const noexcept
     {
         return std::reverse_iterator(iterator(state_, top_index));
     }
 
-    stack_base_sentinel state_view::rend() const noexcept
+    inline stack_base_sentinel state_view::rend() const noexcept
     {
         return {};
     }
 
-    stack_reference state_view::operator[](stack_index index) const noexcept
+    inline stack_reference state_view::operator[](stack_index index) const noexcept
     {
         return stack_reference(state_, index);
     }
 
-    stack_reference state_view::at(stack_index index) const noexcept
+    inline stack_reference state_view::at(stack_index index) const noexcept
     {
         return stack_reference(state_, index);
     }
 
-    stack_reference state_view::top() const noexcept
+    inline stack_reference state_view::top() const noexcept
     {
         return stack_reference(state_, top_index);
     }
 
-    stack_reference state_view::base() const noexcept
+    inline stack_reference state_view::base() const noexcept
     {
         return stack_reference(state_, base_index);
     }
