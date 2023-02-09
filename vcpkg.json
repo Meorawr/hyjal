@@ -4,7 +4,6 @@
   "version-string": "dev",
   "dependencies": [
     "boost-intrusive",
-    "boost-mp11",
     "elune",
     "fmt"
   ]

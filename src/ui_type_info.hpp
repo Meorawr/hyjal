@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "detail/type_list.hpp"
 #include "ui_type_id.hpp"
 #include "ui_type_traits.hpp"
 
@@ -32,7 +33,7 @@ namespace meorawr::hyjal {
         using derivation_predicate = bool (*)(ui_type_id) noexcept;
 
         template<typename... Bases>
-        static constexpr derivation_predicate generate_derivation_predicate(boost::mp11::mp_list<Bases...>) noexcept;
+        static constexpr derivation_predicate generate_derivation_predicate(detail::type_list<Bases...>) noexcept;
 
         ui_type_id id_;
         std::string_view name_;
@@ -45,7 +46,7 @@ namespace meorawr::hyjal {
     inline constexpr const ui_type_info& ui_type_info_v = {std::type_identity<T>{}};
 
     template<typename... Bases>
-    static constexpr auto ui_type_info::generate_derivation_predicate(boost::mp11::mp_list<Bases...>) noexcept -> derivation_predicate
+    static constexpr auto ui_type_info::generate_derivation_predicate(detail::type_list<Bases...>) noexcept -> derivation_predicate
     {
         return [](ui_type_id other) noexcept -> bool {
             return ((ui_type_traits<Bases>::type_id == other) || ...);

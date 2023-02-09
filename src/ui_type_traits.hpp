@@ -4,11 +4,10 @@
 
 #pragma once
 
+#include "detail/type_list.hpp"
 #include "ui_type_id.hpp"
 
 #include <concepts>
-
-#include <boost/mp11/mpl_list.hpp>
 
 namespace meorawr::hyjal {
     template<typename T>
@@ -49,9 +48,8 @@ namespace meorawr::hyjal {
     /**
      * ui_derived_types_t<T>
      *
-     * Resolves to a boost::mp11::mp_list containing the full chain of
-     * derived-from types as would obtained through recursively querying
-     * ui_base_type<T>.
+     * Resolves to a type_list containing the full chain of derived-from types
+     * as would obtained through recursively querying ui_base_type<T>.
      */
 
     template<ui_type... Ts>
@@ -66,7 +64,7 @@ namespace meorawr::hyjal {
     template<ui_type T, ui_type... Ts>
     requires(!requires { typename ui_base_type<T>::type; })
     struct ui_derived_types<T, Ts...> {
-        using type = boost::mp11::mp_list<Ts..., T>;
+        using type = detail::type_list<Ts..., T>;
     };
 
     template<ui_type T>
