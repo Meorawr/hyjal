@@ -84,10 +84,43 @@ target_link_options(
 )
 
 ##
+## Test Registry Target
+##
+
+if(BUILD_TESTING)
+  find_package(doctest CONFIG REQUIRED)
+
+  add_library(hyjal_test_registry SHARED)
+  add_library(hyjal::test_registry ALIAS hyjal_test_registry)
+
+  target_compile_definitions(
+    hyjal_test_registry
+    PUBLIC
+      DOCTEST_CONFIG_IMPLEMENTATION_IN_DLL
+    PRIVATE
+      DOCTEST_CONFIG_IMPLEMENT
+  )
+
+  target_link_libraries(
+    hyjal_test_registry
+    PUBLIC
+      doctest::doctest
+    PRIVATE
+      hyjal::config
+  )
+
+  target_sources(
+    hyjal_test_registry
+    PRIVATE
+      "test/registry.cpp"
+  )
+endif()
+
+##
 ## Library Target
 ##
 
-add_library(hyjal)
+add_library(hyjal SHARED)
 add_library(hyjal::hyjal ALIAS hyjal)
 
 set_target_properties(
@@ -114,6 +147,7 @@ target_include_directories(
 target_link_libraries(
   hyjal
   PRIVATE
+    $<TARGET_NAME_IF_EXISTS:hyjal::test_registry>
     hyjal::config
     Boost::boost
     elune::liblua
@@ -181,6 +215,42 @@ target_sources(
 )
 
 ##
+## Test Runner Target
+##
+
+if(BUILD_TESTING)
+  add_executable(hyjal_test_runner)
+  add_executable(hyjal::test_runner ALIAS hyjal_test_runner)
+
+  target_link_libraries(
+    hyjal_test_runner
+    PRIVATE
+      hyjal::config
+      hyjal::hyjal
+      hyjal::test_registry
+      elune::liblua
+      fmt::fmt
+  )
+
+  target_sources(
+    hyjal_test_runner
+    PRIVATE
+      "test/runner.cpp"
+  )
+endif()
+
+##
+## Test Discovery
+##
+
+if(BUILD_TESTING)
+  include(CTest)
+  include("${doctest_DIR}/doctest.cmake")
+
+  doctest_discover_tests(hyjal_test_runner)
+endif()
+
+##
 ## Installation and Packaging
 ##
 
@@ -201,6 +271,19 @@ if(BUILD_INSTALL)
       DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
       COMPONENT Development
   )
+
+  if(BUILD_TESTING)
+    install(
+      TARGETS hyjal_test_registry hyjal_test_runner
+      EXPORT hyjal-targets
+      RUNTIME
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+        COMPONENT Development
+      LIBRARY
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        COMPONENT Development
+    )
+  endif()
 
   install(
     EXPORT hyjal-targets

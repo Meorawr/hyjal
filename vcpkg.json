@@ -4,6 +4,7 @@
   "version-string": "dev",
   "dependencies": [
     "boost-intrusive",
+    "doctest",
     "elune",
     "fmt"
   ]

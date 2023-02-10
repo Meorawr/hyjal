@@ -37,3 +37,12 @@ try {
 } catch (const std::exception& ex) {
     return luaL_error(L, "%s", ex.what());
 }
+
+#include <fmt/core.h>
+
+#include <doctest/doctest.h>
+
+TEST_CASE("hyjal test")
+{
+    fmt::print("Boo!\n");
+}

@@ -16,7 +16,7 @@ IncludeCategories:
     Priority: 1
   - Regex: "^<meorawr/hyjal/"
     Priority: 2
-  - Regex: "^<(fmt|lua)[/\\.]"
+  - Regex: "^<(boost|doctest|fmt|lua)[/\\.]"
     Priority: 3
   - Regex: "<[[:alnum:]_-]+>"
     Priority: 4
