@@ -38,6 +38,8 @@ namespace meorawr::hyjal {
     template<typename T>
     object_list_hook<T>::~object_list_hook() noexcept
     {
-        node_algorithms::unlink(this);
+        if (!node_algorithms::inited(this)) {
+            node_algorithms::unlink(this);
+        }
     }
 }
