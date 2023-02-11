@@ -10,8 +10,8 @@ namespace meorawr::hyjal {
     {
     }
 
-    debug_memory_resource::debug_memory_resource(std::pmr::memory_resource& resource) noexcept
-        : resource_(&resource)
+    debug_memory_resource::debug_memory_resource(std::pmr::memory_resource* resource) noexcept
+        : resource_(resource)
     {
     }
 

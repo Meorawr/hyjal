@@ -10,7 +10,7 @@ namespace meorawr::hyjal {
     class debug_memory_resource : public std::pmr::memory_resource {
     public:
         debug_memory_resource() noexcept;
-        explicit debug_memory_resource(std::pmr::memory_resource& resource) noexcept;
+        explicit debug_memory_resource(std::pmr::memory_resource* resource) noexcept;
 
         std::size_t allocated_bytes() const noexcept;
         std::size_t freed_bytes() const noexcept;
