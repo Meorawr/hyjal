@@ -160,7 +160,6 @@ target_sources(
     "src/lua/state.hpp"
     "src/lua/state_deleter.cpp"
     "src/lua/state_deleter.hpp"
-    "src/lua/state_view.hpp"
     "src/lua/upvalue_index.hpp"
     "src/object.cpp"
     "src/object.hpp"

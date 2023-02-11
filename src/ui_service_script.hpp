@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "lua/state_view.hpp"
+#include "lua/state.hpp"
 
 namespace meorawr::hyjal {
     void register_script_functions(lua::state_view L, class ui_service& ui);

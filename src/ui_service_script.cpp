@@ -6,7 +6,7 @@
 
 #include "font.hpp"
 #include "frame.hpp"
-#include "lua/state_view.hpp"
+#include "lua/state.hpp"
 #include "object.hpp"
 #include "script_util.hpp"
 #include "ui_service.hpp"

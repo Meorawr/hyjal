@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "lua/state_view.hpp"
+#include "lua/state.hpp"
 #include "object_list.hpp"
 #include "object_list_traits.hpp"
 #include "object_list_view.hpp"
