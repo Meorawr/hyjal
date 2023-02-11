@@ -59,8 +59,7 @@ namespace meorawr::hyjal::lua {
 
     inline stack_reference& stack_reference::operator=(stack_reference& other)
     {
-        // TODO: Factor this out to a free function that is xcopy-aware.
-        lua_copy(state_, other.index_, index_);
+        stack_algorithms::copy(other.state_, other.index_, state_, index_);
         return *this;
     }
 

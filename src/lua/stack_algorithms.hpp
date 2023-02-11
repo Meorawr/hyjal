@@ -36,4 +36,16 @@ namespace meorawr::hyjal::lua::stack_algorithms {
             return -(lua_gettop(state) - index + 1);
         }
     }
+
+    inline void copy(lua_State* from, index_t from_index, lua_State* to, index_t to_index)
+    {
+        if (from == to) [[likely]] {
+            lua_copy(to, from_index, to_index);
+        } else {
+            // Assumes xmovable; should assert this?
+            lua_pushvalue(from, from_index);
+            lua_xmove(from, to, 1);
+            lua_replace(to, to_index);
+        }
+    }
 }
