@@ -56,6 +56,7 @@ target_compile_definitions(
     $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
     $<$<PLATFORM_ID:Windows>:UNICODE>
     $<$<PLATFORM_ID:Windows>:_UNICODE>
+    $<$<NOT:$<BOOL:BUILD_TESTING>>:DOCTEST_CONFIG_DISABLE>
 )
 
 target_compile_features(
