@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include "state.hpp"
+#include <lua.hpp>
 
 namespace meorawr::hyjal::lua {
     struct state_deleter {
-        void operator()(state_t state) const noexcept;
+        void operator()(lua_State* state) const noexcept;
     };
 }

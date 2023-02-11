@@ -8,7 +8,6 @@
 #include "pseudo_index.hpp"
 #include "raw_index.hpp"
 #include "stack_index.hpp"
-#include "state.hpp"
 #include "upvalue_index.hpp"
 
 #include <lua.hpp>
@@ -16,43 +15,43 @@
 namespace meorawr::hyjal::lua {
     class stack_reference {
     public:
-        constexpr stack_reference(state_t state, stack_index index) noexcept;
-        constexpr stack_reference(state_t state, upvalue_index index) noexcept;
-        constexpr stack_reference(state_t state, pseudo_index index) noexcept;
-        constexpr stack_reference(state_t state, raw_index index) noexcept;
+        constexpr stack_reference(lua_State* state, stack_index index) noexcept;
+        constexpr stack_reference(lua_State* state, upvalue_index index) noexcept;
+        constexpr stack_reference(lua_State* state, pseudo_index index) noexcept;
+        constexpr stack_reference(lua_State* state, raw_index index) noexcept;
         stack_reference(stack_reference&) = delete;
         stack_reference(stack_reference&&) = delete;
 
         stack_reference& operator=(stack_reference& other);
         stack_reference& operator=(stack_reference&&) = delete;
 
-        constexpr state_t state() const noexcept;
+        constexpr lua_State* state() const noexcept;
         constexpr index_t index() const noexcept;
 
     private:
-        state_t state_;
+        lua_State* state_;
         index_t index_;
     };
 
-    constexpr stack_reference::stack_reference(state_t state, stack_index index) noexcept
+    constexpr stack_reference::stack_reference(lua_State* state, stack_index index) noexcept
         : state_(state)
         , index_(index)
     {
     }
 
-    constexpr stack_reference::stack_reference(state_t state, upvalue_index index) noexcept
+    constexpr stack_reference::stack_reference(lua_State* state, upvalue_index index) noexcept
         : state_(state)
         , index_(index)
     {
     }
 
-    constexpr stack_reference::stack_reference(state_t state, pseudo_index index) noexcept
+    constexpr stack_reference::stack_reference(lua_State* state, pseudo_index index) noexcept
         : state_(state)
         , index_(index)
     {
     }
 
-    constexpr stack_reference::stack_reference(state_t state, raw_index index) noexcept
+    constexpr stack_reference::stack_reference(lua_State* state, raw_index index) noexcept
         : state_(state)
         , index_(index)
     {
@@ -65,7 +64,7 @@ namespace meorawr::hyjal::lua {
         return *this;
     }
 
-    constexpr state_t stack_reference::state() const noexcept
+    constexpr lua_State* stack_reference::state() const noexcept
     {
         return state_;
     }

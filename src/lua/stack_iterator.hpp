@@ -8,7 +8,6 @@
 #include "stack_algorithms.hpp"
 #include "stack_index.hpp"
 #include "stack_reference.hpp"
-#include "state.hpp"
 
 #include <concepts>
 #include <iterator>
@@ -22,7 +21,7 @@ namespace meorawr::hyjal::lua {
 
     class stack_iterator_proxy {
     public:
-        constexpr stack_iterator_proxy(state_t state, absolute_index index) noexcept;
+        constexpr stack_iterator_proxy(lua_State* state, absolute_index index) noexcept;
 
         constexpr stack_reference* operator->() noexcept;
 
@@ -39,8 +38,8 @@ namespace meorawr::hyjal::lua {
         using iterator_concept = std::random_access_iterator_tag;
 
         constexpr stack_iterator() noexcept = default;
-        constexpr stack_iterator(state_t state, absolute_index index) noexcept;
-        stack_iterator(state_t state, stack_index index) noexcept;
+        constexpr stack_iterator(lua_State* state, absolute_index index) noexcept;
+        stack_iterator(lua_State* state, stack_index index) noexcept;
 
         // Input iterator operators
 
@@ -88,17 +87,17 @@ namespace meorawr::hyjal::lua {
         friend difference_type operator-(stack_top_sentinel, const stack_iterator& iter) noexcept;
 
     private:
-        state_t state_ = {};
+        lua_State* state_ = {};
         absolute_index index_ = {};
     };
 
-    constexpr stack_iterator::stack_iterator(state_t state, absolute_index index) noexcept
+    constexpr stack_iterator::stack_iterator(lua_State* state, absolute_index index) noexcept
         : state_(state)
         , index_(index)
     {
     }
 
-    inline stack_iterator::stack_iterator(state_t state, stack_index index) noexcept
+    inline stack_iterator::stack_iterator(lua_State* state, stack_index index) noexcept
         : stack_iterator(state, absolute_index(state, index))
     {
     }
@@ -207,7 +206,7 @@ namespace meorawr::hyjal::lua {
         swap(a.index_, b.index_);
     }
 
-    constexpr stack_iterator_proxy::stack_iterator_proxy(state_t state, absolute_index index) noexcept
+    constexpr stack_iterator_proxy::stack_iterator_proxy(lua_State* state, absolute_index index) noexcept
         : ref_(state, index)
     {
     }

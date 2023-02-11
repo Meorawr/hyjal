@@ -8,7 +8,6 @@
 #include "stack_index.hpp"
 #include "stack_iterator.hpp"
 #include "stack_reference.hpp"
-#include "state.hpp"
 #include "state_deleter.hpp"
 
 #include <lua.hpp>
@@ -34,7 +33,7 @@ namespace meorawr::hyjal::lua {
         requires std::constructible_from<Pointer, Args...>
         constexpr basic_state_view(Args&&... args);
 
-        constexpr operator state_t() const noexcept;
+        constexpr operator lua_State*() const noexcept;
 
         // Stack iterators
 
@@ -79,7 +78,7 @@ namespace meorawr::hyjal::lua {
     }
 
     template<typename Pointer>
-    constexpr basic_state_view<Pointer>::operator state_t() const noexcept
+    constexpr basic_state_view<Pointer>::operator lua_State*() const noexcept
     {
         return std::to_address(state_);
     }
@@ -157,6 +156,6 @@ namespace meorawr::hyjal::lua {
         swap(a.state_, b.state_);
     }
 
-    using state_view = basic_state_view<state_t>;
+    using state_view = basic_state_view<lua_State*>;
     using unique_state = basic_state_view<std::unique_ptr<lua_State, state_deleter>>;
 }

@@ -5,22 +5,21 @@
 #pragma once
 
 #include "index.hpp"
-#include "state.hpp"
 
 #include <lua.hpp>
 
 namespace meorawr::hyjal::lua::stack_algorithms {
-    inline bool empty(state_t state) noexcept
+    inline bool empty(lua_State* state) noexcept
     {
         return lua_gettop(state) == 0;
     }
 
-    inline index_size_t size(state_t state) noexcept
+    inline index_size_t size(lua_State* state) noexcept
     {
         return lua_gettop(state);
     }
 
-    inline index_t absolute_index(state_t state, index_t index) noexcept
+    inline index_t absolute_index(lua_State* state, index_t index) noexcept
     {
         if (index > 0) {
             return index;
@@ -29,7 +28,7 @@ namespace meorawr::hyjal::lua::stack_algorithms {
         }
     }
 
-    inline index_t relative_index(state_t state, index_t index) noexcept
+    inline index_t relative_index(lua_State* state, index_t index) noexcept
     {
         if (index < 0) {
             return index;

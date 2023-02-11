@@ -5,7 +5,7 @@
 #include "state_deleter.hpp"
 
 namespace meorawr::hyjal::lua {
-    void state_deleter::operator()(state_t state) const noexcept
+    void state_deleter::operator()(lua_State* state) const noexcept
     {
         lua_close(state);
     }
