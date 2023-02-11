@@ -14,6 +14,11 @@
 #include <doctest/doctest.h>
 
 namespace meorawr::hyjal {
+    ui_service::ui_service(lua::state_view L)
+        : ui_service(L, get_default_memory_resource())
+    {
+    }
+
     ui_service::ui_service(lua::state_view L, std::pmr::memory_resource* resource)
         : state_(L)
         , object_memory_resource_(resource)

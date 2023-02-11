@@ -21,6 +21,7 @@ namespace meorawr::hyjal {
 
     class ui_service {
     public:
+        explicit ui_service(lua::state_view L);
         ui_service(lua::state_view L, std::pmr::memory_resource* resource);
         ui_service(const ui_service&) = delete;
         ui_service(ui_service&&) = delete;
