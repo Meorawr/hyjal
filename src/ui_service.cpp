@@ -8,6 +8,7 @@
 #include "font.hpp"
 #include "frame.hpp"
 #include "object.hpp"
+#include "test_util.hpp"
 
 #include <meorawr/hyjal/hyjal.hpp>
 
@@ -102,12 +103,14 @@ namespace meorawr::hyjal {
 TEST_SUITE("ui_service")
 {
     using namespace meorawr::hyjal;
+    using namespace meorawr::hyjal::test;
 
     TEST_CASE("object ownership"
         * doctest::description("Verifies that objects are destroyed automatically with the ui service"))
     {
-        lua_State* L = luaL_newstate();
-        ui_service ui(L, get_default_memory_resource());
+        lua::unique_state state = make_lua_state();
+        ui_service ui(state);
+
         allocate_object<object>(ui);
 
         // As long as it doesn't crash here it's good.
@@ -116,8 +119,8 @@ TEST_SUITE("ui_service")
     TEST_CASE("manual object deletion"
         * doctest::description("Verifies that objects can be manually created and deleted"))
     {
-        lua_State* L = luaL_newstate();
-        ui_service ui(L, get_default_memory_resource());
+        lua::unique_state state = make_lua_state();
+        ui_service ui(state);
 
         object* obj = new_object<object>(ui, "Test Object");
         delete_object(obj);
@@ -130,8 +133,8 @@ TEST_SUITE("ui_service")
     {
         static constexpr int num_objects = 1000;
 
-        lua_State* L = luaL_newstate();
-        ui_service ui(L, get_default_memory_resource());
+        lua::unique_state state = make_lua_state();
+        ui_service ui(state);
 
         for (auto i = 0; i < num_objects; ++i) {
             new_object<object>(ui, "");
