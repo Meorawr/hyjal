@@ -236,6 +236,10 @@ if(BUILD_TESTING)
   target_sources(
     hyjal_test_runner
     PRIVATE
+      "test/debug_memory_listener.cpp"
+      "test/debug_memory_listener.hpp"
+      "test/debug_memory_resource.cpp"
+      "test/debug_memory_resource.hpp"
       "test/runner.cpp"
   )
 endif()
