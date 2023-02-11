@@ -9,6 +9,7 @@
 #include "stack_iterator.hpp"
 #include "stack_reference.hpp"
 #include "state.hpp"
+#include "state_deleter.hpp"
 
 #include <lua.hpp>
 
@@ -157,4 +158,5 @@ namespace meorawr::hyjal::lua {
     }
 
     using state_view = basic_state_view<state_t>;
+    using unique_state = basic_state_view<std::unique_ptr<lua_State, state_deleter>>;
 }
