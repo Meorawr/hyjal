@@ -14,7 +14,6 @@
 using meorawr::hyjal::ui_service;
 
 namespace {
-
     std::pmr::memory_resource* default_resource_ = nullptr;
 
     int destroy_ui_service(lua_State* L)
