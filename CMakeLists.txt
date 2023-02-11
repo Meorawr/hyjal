@@ -143,6 +143,7 @@ target_sources(
     "src/child_list_traits.hpp"
     "src/child_list_value_traits.hpp"
     "src/child_list_view.hpp"
+    "src/detail/concepts.hpp"
     "src/detail/type_list.hpp"
     "src/font.cpp"
     "src/font.hpp"
