@@ -52,7 +52,7 @@ namespace meorawr::hyjal {
         lua_setmetatable(L, -2);
 
         lua_pushvalue(L, LUA_GLOBALSINDEX);
-        meorawr::hyjal::register_script_functions(L, *ui);
+        register_script_functions(L, *ui);
         lua_pop(L, 1);
         return 1;
     } catch (const std::exception& ex) {
