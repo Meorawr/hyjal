@@ -13,18 +13,21 @@
 #include <lua.hpp>
 
 #include <iterator>
+#include <memory>
 #include <utility>
 
 namespace meorawr::hyjal::lua {
-    class state_view {
+    template<typename Pointer>
+    class basic_state_view {
     public:
         using size_type = index_size_t;
         using difference_type = index_difference_t;
         using iterator = stack_iterator;
         using reverse_iterator = std::reverse_iterator<stack_iterator>;
 
-        constexpr state_view(state_t state) noexcept;
-        constexpr state_view(std::nullptr_t) noexcept = delete;
+        constexpr basic_state_view() noexcept = default;
+        constexpr basic_state_view(Pointer state) noexcept;
+        constexpr basic_state_view(std::nullptr_t) noexcept = delete;
 
         constexpr operator state_t() const noexcept;
 
@@ -50,80 +53,96 @@ namespace meorawr::hyjal::lua {
 
         // Non-member functions
 
-        friend constexpr void swap(state_view& a, state_view& b) noexcept;
+        friend constexpr void swap(basic_state_view& a, basic_state_view& b) noexcept;
 
     private:
-        state_t state_ = {};
+        Pointer state_ = {};
     };
 
-    constexpr state_view::state_view(state_t state) noexcept
-        : state_(state)
+    template<typename Pointer>
+    constexpr basic_state_view<Pointer>::basic_state_view(Pointer state) noexcept
+        : state_(std::move(state))
     {
     }
 
-    constexpr state_view::operator state_t() const noexcept
+    template<typename Pointer>
+    constexpr basic_state_view<Pointer>::operator state_t() const noexcept
     {
-        return state_;
+        return std::to_address(state_);
     }
 
-    inline state_view::iterator state_view::begin() const noexcept
+    template<typename Pointer>
+    inline auto basic_state_view<Pointer>::begin() const noexcept -> iterator
     {
         return iterator(state_, base_index);
     }
 
-    inline stack_top_sentinel state_view::end() const noexcept
+    template<typename Pointer>
+    inline stack_top_sentinel basic_state_view<Pointer>::end() const noexcept
     {
         return {};
     }
 
-    inline state_view::reverse_iterator state_view::rbegin() const noexcept
+    template<typename Pointer>
+    inline auto basic_state_view<Pointer>::rbegin() const noexcept -> reverse_iterator
     {
         return std::reverse_iterator(iterator(state_, top_index));
     }
 
-    inline stack_base_sentinel state_view::rend() const noexcept
+    template<typename Pointer>
+    inline stack_base_sentinel basic_state_view<Pointer>::rend() const noexcept
     {
         return {};
     }
 
-    inline stack_reference state_view::operator[](stack_index index) const noexcept
+    template<typename Pointer>
+    inline stack_reference basic_state_view<Pointer>::operator[](stack_index index) const noexcept
     {
         return stack_reference(state_, index);
     }
 
-    inline stack_reference state_view::at(stack_index index) const noexcept
+    template<typename Pointer>
+    inline stack_reference basic_state_view<Pointer>::at(stack_index index) const noexcept
     {
         return stack_reference(state_, index);
     }
 
-    inline stack_reference state_view::top() const noexcept
+    template<typename Pointer>
+    inline stack_reference basic_state_view<Pointer>::top() const noexcept
     {
         return stack_reference(state_, top_index);
     }
 
-    inline stack_reference state_view::base() const noexcept
+    template<typename Pointer>
+    inline stack_reference basic_state_view<Pointer>::base() const noexcept
     {
         return stack_reference(state_, base_index);
     }
 
-    inline bool state_view::empty() const noexcept
+    template<typename Pointer>
+    inline bool basic_state_view<Pointer>::empty() const noexcept
     {
         return stack_algorithms::empty(state_);
     }
 
-    inline state_view::size_type state_view::size() const noexcept
+    template<typename Pointer>
+    inline auto basic_state_view<Pointer>::size() const noexcept -> size_type
     {
         return stack_algorithms::size(state_);
     }
 
-    inline constexpr state_view::size_type state_view::max_size() const noexcept
+    template<typename Pointer>
+    inline constexpr auto basic_state_view<Pointer>::max_size() const noexcept -> size_type
     {
         return LUAI_MAXCSTACK;
     }
 
-    constexpr void swap(state_view& a, state_view& b) noexcept
+    template<typename Pointer>
+    constexpr void swap(basic_state_view<Pointer>& a, basic_state_view<Pointer>& b) noexcept
     {
         using std::swap;
         swap(a.state_, b.state_);
     }
+
+    using state_view = basic_state_view<state_t>;
 }
