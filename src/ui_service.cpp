@@ -9,6 +9,10 @@
 #include "frame.hpp"
 #include "object.hpp"
 
+#include <meorawr/hyjal/hyjal.hpp>
+
+#include <doctest/doctest.h>
+
 namespace meorawr::hyjal {
     ui_service::ui_service(lua::state_view L, std::pmr::memory_resource* resource)
         : state_(L)
@@ -87,5 +91,47 @@ namespace meorawr::hyjal {
             ptr->~object();
             ui.deallocate_object(ptr, type);
         }
+    }
+}
+
+TEST_SUITE("ui_service")
+{
+    using namespace meorawr::hyjal;
+
+    TEST_CASE("object ownership"
+        * doctest::description("Verifies that objects are destroyed automatically with the ui service"))
+    {
+        lua_State* L = luaL_newstate();
+        ui_service ui(L, get_default_memory_resource());
+        allocate_object<object>(ui);
+
+        // As long as it doesn't crash here it's good.
+    }
+
+    TEST_CASE("manual object deletion"
+        * doctest::description("Verifies that objects can be manually created and deleted"))
+    {
+        lua_State* L = luaL_newstate();
+        ui_service ui(L, get_default_memory_resource());
+
+        object* obj = new_object<object>(ui, "Test Object");
+        delete_object(obj);
+
+        // As long as it doesn't crash here it's good.
+    }
+
+    TEST_CASE("object list tracking"
+        * doctest::description("Verifies that all created objects are stored in a list"))
+    {
+        static constexpr int num_objects = 1000;
+
+        lua_State* L = luaL_newstate();
+        ui_service ui(L, get_default_memory_resource());
+
+        for (auto i = 0; i < num_objects; ++i) {
+            new_object<object>(ui, "");
+        }
+
+        DOCTEST_REQUIRE_EQ(ui.objects().size(), num_objects);
     }
 }
