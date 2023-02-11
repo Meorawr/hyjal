@@ -208,6 +208,8 @@ target_sources(
     "src/region.hpp"
     "src/script_util.cpp"
     "src/script_util.hpp"
+    "src/test_util.cpp"
+    "src/test_util.hpp"
     "src/ui_service.cpp"
     "src/ui_service.hpp"
     "src/ui_service_script.cpp"
