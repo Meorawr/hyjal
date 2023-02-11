@@ -2,9 +2,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "object.hpp"
+#include "../src/object.hpp"
+#include "../src/ui_service.hpp"
 #include "test_util.hpp"
-#include "ui_service.hpp"
 
 #include <doctest/doctest.h>
 

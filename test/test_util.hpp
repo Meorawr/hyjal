@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "lua/state.hpp"
+#include "../src/lua/state.hpp"
 
 namespace meorawr::hyjal::test {
     lua::unique_state make_lua_state();

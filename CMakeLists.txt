@@ -110,7 +110,6 @@ target_include_directories(
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE
     "${PROJECT_SOURCE_DIR}/include/meorawr/hyjal"
-    "${PROJECT_SOURCE_DIR}/src"
 )
 
 target_link_libraries(
