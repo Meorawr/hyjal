@@ -29,6 +29,10 @@ namespace meorawr::hyjal::lua {
         constexpr basic_state_view(Pointer state) noexcept;
         constexpr basic_state_view(std::nullptr_t) noexcept = delete;
 
+        template<typename... Args>
+        requires std::constructible_from<Pointer, Args...>
+        constexpr basic_state_view(Args&&... args);
+
         constexpr operator state_t() const noexcept;
 
         // Stack iterators
@@ -62,6 +66,14 @@ namespace meorawr::hyjal::lua {
     template<typename Pointer>
     constexpr basic_state_view<Pointer>::basic_state_view(Pointer state) noexcept
         : state_(std::move(state))
+    {
+    }
+
+    template<typename Pointer>
+    template<typename... Args>
+    requires std::constructible_from<Pointer, Args...>
+    constexpr basic_state_view<Pointer>::basic_state_view(Args&&... args)
+        : state_(std::forward<Args>(args)...)
     {
     }
 
