@@ -28,8 +28,17 @@
 #define HYJAL_API
 #endif
 
-extern "C" {
-    HYJAL_API int luaopen_hyjal(struct lua_State* L) noexcept;
+#define HYJAL_C_API extern "C" HYJAL_API
+
+#include <memory_resource>
+
+struct lua_State;
+
+namespace meorawr::hyjal {
+    HYJAL_API std::pmr::memory_resource* get_default_memory_resource() noexcept;
+    HYJAL_API void set_default_memory_resource(std::pmr::memory_resource* resource) noexcept;
+
+    HYJAL_C_API int luaopen_hyjal(lua_State* L) noexcept;
 }
 
 #endif
