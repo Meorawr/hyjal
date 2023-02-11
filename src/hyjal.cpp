@@ -48,7 +48,7 @@ namespace meorawr::hyjal {
         lua_setfield(L, -2, "__gc");
         lua_pushboolean(L, false);
         lua_setfield(L, -2, "__metatable");
-        ui_service* ui = new (userdata) ui_service(L, get_default_memory_resource());
+        ui_service* ui = new (userdata) ui_service(L);
         lua_setmetatable(L, -2);
 
         lua_pushvalue(L, LUA_GLOBALSINDEX);
