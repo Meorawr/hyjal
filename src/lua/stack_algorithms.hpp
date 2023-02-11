@@ -37,6 +37,11 @@ namespace meorawr::hyjal::lua::stack_algorithms {
         }
     }
 
+    inline bool is_xmovable(lua_State* from, lua_State* to)
+    {
+        return from != to && lua_topointer(from, LUA_REGISTRYINDEX) == lua_topointer(to, LUA_REGISTRYINDEX);
+    }
+
     inline void copy(lua_State* from, index_t from_index, lua_State* to, index_t to_index)
     {
         if (from == to) [[likely]] {
