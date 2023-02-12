@@ -6,7 +6,6 @@
 
 #include "index.hpp"
 #include "stack_algorithms.hpp"
-#include "stack_index.hpp"
 #include "stack_reference.hpp"
 
 #include <concepts>

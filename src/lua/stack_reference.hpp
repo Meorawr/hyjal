@@ -5,10 +5,6 @@
 #pragma once
 
 #include "index.hpp"
-#include "pseudo_index.hpp"
-#include "raw_index.hpp"
-#include "stack_index.hpp"
-#include "upvalue_index.hpp"
 
 #include <lua.hpp>
 
