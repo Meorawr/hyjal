@@ -11,10 +11,7 @@
 namespace meorawr::hyjal::lua {
     class stack_reference {
     public:
-        constexpr stack_reference(lua_State* state, stack_index index) noexcept;
-        constexpr stack_reference(lua_State* state, upvalue_index index) noexcept;
-        constexpr stack_reference(lua_State* state, pseudo_index index) noexcept;
-        constexpr stack_reference(lua_State* state, raw_index index) noexcept;
+        constexpr stack_reference(lua_State* state, accessible_index index) noexcept;
         stack_reference(stack_reference&) = delete;
         stack_reference(stack_reference&&) = delete;
 
@@ -26,28 +23,10 @@ namespace meorawr::hyjal::lua {
 
     private:
         lua_State* state_;
-        index_t index_;
+        accessible_index index_;
     };
 
-    constexpr stack_reference::stack_reference(lua_State* state, stack_index index) noexcept
-        : state_(state)
-        , index_(index)
-    {
-    }
-
-    constexpr stack_reference::stack_reference(lua_State* state, upvalue_index index) noexcept
-        : state_(state)
-        , index_(index)
-    {
-    }
-
-    constexpr stack_reference::stack_reference(lua_State* state, pseudo_index index) noexcept
-        : state_(state)
-        , index_(index)
-    {
-    }
-
-    constexpr stack_reference::stack_reference(lua_State* state, raw_index index) noexcept
+    constexpr stack_reference::stack_reference(lua_State* state, accessible_index index) noexcept
         : state_(state)
         , index_(index)
     {
