@@ -7,7 +7,7 @@
 #include <lua.hpp>
 
 namespace meorawr::hyjal::lua {
-    enum class type {
+    enum class value_type {
         none = LUA_TNONE,
         nil = LUA_TNIL,
         boolean = LUA_TBOOLEAN,
@@ -20,7 +20,10 @@ namespace meorawr::hyjal::lua {
         thread = LUA_TTHREAD,
     };
 
-    struct nil_t { };
+    struct nil_t {
+        constexpr explicit operator bool() noexcept { return false; }
+    };
+
     inline constexpr nil_t nil;
 
     using number_t = lua_Number;

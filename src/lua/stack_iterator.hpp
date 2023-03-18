@@ -5,76 +5,73 @@
 #pragma once
 
 #include "index.hpp"
-#include "stack_algorithms.hpp"
-#include "stack_reference.hpp"
+#include "stack_fwd.hpp"
+#include "value_reference.hpp"
 
 #include <concepts>
 #include <iterator>
 
 namespace meorawr::hyjal::lua {
-    class stack_iterator;
-    class stack_iterator_proxy;
-    class stack_sentinel;
-    class stack_base_sentinel;
-    class stack_top_sentinel;
-
     class stack_iterator_proxy {
     public:
-        constexpr stack_iterator_proxy(lua_State* state, absolute_index index) noexcept;
+        stack_iterator_proxy(lua_State* state, absolute_index index) noexcept
+            : ref_(state, index)
+        {
+        }
 
-        constexpr stack_reference* operator->() noexcept;
+        value_reference* operator->() noexcept { return &ref_; }
 
     private:
-        stack_reference ref_;
+        value_reference ref_;
     };
 
     class stack_iterator {
     public:
         using difference_type = index_difference_t;
-        using value_type = stack_reference;
+        using value_type = value_reference;
         using pointer = stack_iterator_proxy;
-        using reference = stack_reference;
+        using reference = value_reference;
         using iterator_concept = std::random_access_iterator_tag;
 
-        constexpr stack_iterator() noexcept = default;
-        constexpr stack_iterator(lua_State* state, absolute_index index) noexcept;
+        stack_iterator() noexcept = default;
+        stack_iterator(lua_State* state, absolute_index index) noexcept;
         stack_iterator(lua_State* state, stack_index index) noexcept;
 
         // Input iterator operators
 
-        constexpr reference operator*() const noexcept;
-        constexpr pointer operator->() const noexcept;
+        reference operator*() const noexcept;
+        pointer operator->() const noexcept;
 
-        constexpr stack_iterator& operator++() noexcept;
-        constexpr stack_iterator operator++(int) noexcept;
+        stack_iterator& operator++() noexcept;
+        stack_iterator operator++(int) noexcept;
 
         // Forward iterator operators
 
-        friend constexpr bool operator==(const stack_iterator& a, const stack_iterator& b) noexcept;
+        friend bool operator==(const stack_iterator& a, const stack_iterator& b) noexcept;
 
         // Bidirectional iterator operators
 
-        constexpr stack_iterator& operator--() noexcept;
-        constexpr stack_iterator operator--(int) noexcept;
+        stack_iterator& operator--() noexcept;
+        stack_iterator operator--(int) noexcept;
 
         // Random-access iterator operators
 
-        constexpr reference operator[](difference_type offset) const noexcept;
+        reference operator[](difference_type offset) const noexcept;
 
-        constexpr stack_iterator& operator+=(difference_type offset) noexcept;
-        constexpr stack_iterator& operator-=(difference_type offset) noexcept;
+        stack_iterator& operator+=(difference_type offset) noexcept;
+        stack_iterator& operator-=(difference_type offset) noexcept;
 
-        friend constexpr stack_iterator operator+(const stack_iterator& iter, difference_type offset) noexcept;
-        friend constexpr stack_iterator operator+(difference_type offset, const stack_iterator& iter) noexcept;
-        friend constexpr stack_iterator operator-(const stack_iterator& iter, difference_type offset) noexcept;
+        friend stack_iterator operator+(const stack_iterator& iter, difference_type offset) noexcept;
+        friend stack_iterator operator+(difference_type offset, const stack_iterator& iter) noexcept;
+        friend stack_iterator operator-(const stack_iterator& iter, difference_type offset) noexcept;
 
-        friend constexpr difference_type operator-(const stack_iterator& a, const stack_iterator& b) noexcept;
+        friend difference_type operator-(const stack_iterator& a, const stack_iterator& b) noexcept;
 
-        friend constexpr std::partial_ordering operator<=>(const stack_iterator& a, const stack_iterator& b) noexcept;
+        friend std::partial_ordering operator<=>(const stack_iterator& a, const stack_iterator& b) noexcept;
 
         // Non-member functions
 
-        friend constexpr void swap(stack_iterator& a, stack_iterator& b) noexcept;
+        friend void swap(stack_iterator& a, stack_iterator& b) noexcept;
 
         friend bool operator==(const stack_iterator& iter, stack_sentinel) noexcept;
         friend bool operator==(const stack_iterator& iter, stack_base_sentinel) noexcept;
@@ -90,7 +87,7 @@ namespace meorawr::hyjal::lua {
         absolute_index index_ = {};
     };
 
-    constexpr stack_iterator::stack_iterator(lua_State* state, absolute_index index) noexcept
+    inline stack_iterator::stack_iterator(lua_State* state, absolute_index index) noexcept
         : state_(state)
         , index_(index)
     {
@@ -101,86 +98,86 @@ namespace meorawr::hyjal::lua {
     {
     }
 
-    constexpr stack_iterator::reference stack_iterator::operator*() const noexcept
+    inline stack_iterator::reference stack_iterator::operator*() const noexcept
     {
         return reference(state_, index_);
     }
 
-    constexpr stack_iterator::pointer stack_iterator::operator->() const noexcept
+    inline stack_iterator::pointer stack_iterator::operator->() const noexcept
     {
         return pointer(state_, index_);
     }
 
-    constexpr stack_iterator& stack_iterator::operator++() noexcept
+    inline stack_iterator& stack_iterator::operator++() noexcept
     {
         ++index_;
         return *this;
     }
 
-    constexpr stack_iterator stack_iterator::operator++(int) noexcept
+    inline stack_iterator stack_iterator::operator++(int) noexcept
     {
         stack_iterator copy = *this;
         ++index_;
         return copy;
     }
 
-    constexpr bool operator==(const stack_iterator& a, const stack_iterator& b) noexcept
+    inline bool operator==(const stack_iterator& a, const stack_iterator& b) noexcept
     {
         return a.state_ == b.state_ && a.index_ == b.index_;
     }
 
-    constexpr stack_iterator& stack_iterator::operator--() noexcept
+    inline stack_iterator& stack_iterator::operator--() noexcept
     {
         --index_;
         return *this;
     }
 
-    constexpr stack_iterator stack_iterator::operator--(int) noexcept
+    inline stack_iterator stack_iterator::operator--(int) noexcept
     {
         stack_iterator copy = *this;
         --index_;
         return copy;
     }
 
-    constexpr stack_iterator::reference stack_iterator::operator[](difference_type offset) const noexcept
+    inline stack_iterator::reference stack_iterator::operator[](difference_type offset) const noexcept
     {
         return reference(state_, index_ + offset);
     }
 
-    constexpr stack_iterator& stack_iterator::operator+=(difference_type offset) noexcept
+    inline stack_iterator& stack_iterator::operator+=(difference_type offset) noexcept
     {
         index_ += offset;
         return *this;
     }
 
-    constexpr stack_iterator& stack_iterator::operator-=(difference_type offset) noexcept
+    inline stack_iterator& stack_iterator::operator-=(difference_type offset) noexcept
     {
         index_ -= offset;
         return *this;
     }
 
-    constexpr stack_iterator operator+(const stack_iterator& iter, stack_iterator::difference_type offset) noexcept
+    inline stack_iterator operator+(const stack_iterator& iter, stack_iterator::difference_type offset) noexcept
     {
         stack_iterator copy = iter;
         copy.index_ += offset;
         return copy;
     }
 
-    constexpr stack_iterator operator+(stack_iterator::difference_type offset, const stack_iterator& iter) noexcept
+    inline stack_iterator operator+(stack_iterator::difference_type offset, const stack_iterator& iter) noexcept
     {
         stack_iterator copy = iter;
         copy.index_ += offset;
         return copy;
     }
 
-    constexpr stack_iterator operator-(const stack_iterator& iter, stack_iterator::difference_type offset) noexcept
+    inline stack_iterator operator-(const stack_iterator& iter, stack_iterator::difference_type offset) noexcept
     {
         stack_iterator copy = iter;
         copy.index_ -= offset;
         return copy;
     }
 
-    constexpr stack_iterator::difference_type operator-(const stack_iterator& a, const stack_iterator& b) noexcept
+    inline stack_iterator::difference_type operator-(const stack_iterator& a, const stack_iterator& b) noexcept
     {
         if (a.state_ != b.state_) [[unlikely]] {
             return 0;
@@ -189,7 +186,7 @@ namespace meorawr::hyjal::lua {
         }
     }
 
-    constexpr std::partial_ordering operator<=>(const stack_iterator& a, const stack_iterator& b) noexcept
+    inline std::partial_ordering operator<=>(const stack_iterator& a, const stack_iterator& b) noexcept
     {
         if (a.state_ != b.state_) [[unlikely]] {
             return std::partial_ordering::unordered;
@@ -198,21 +195,11 @@ namespace meorawr::hyjal::lua {
         }
     }
 
-    constexpr void swap(stack_iterator& a, stack_iterator& b) noexcept
+    inline void swap(stack_iterator& a, stack_iterator& b) noexcept
     {
         using std::swap;
         swap(a.state_, b.state_);
         swap(a.index_, b.index_);
-    }
-
-    constexpr stack_iterator_proxy::stack_iterator_proxy(lua_State* state, absolute_index index) noexcept
-        : ref_(state, index)
-    {
-    }
-
-    constexpr stack_reference* stack_iterator_proxy::operator->() noexcept
-    {
-        return &ref_;
     }
 
     static_assert(std::input_iterator<stack_iterator>);

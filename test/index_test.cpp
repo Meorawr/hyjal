@@ -3,6 +3,11 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #include "../src/lua/index.hpp"
+#include "../src/lua/state.hpp"
+#include "../src/lua/value_cast.hpp"
+#include "test_util.hpp"
+
+#include <doctest/doctest.h>
 
 using meorawr::hyjal::lua::absolute_index;
 using meorawr::hyjal::lua::accessible_index;
@@ -108,3 +113,51 @@ static_assert(!is_category_constructible<absolute_index>);
 static_assert(!is_category_constructible<relative_index>);
 static_assert(!is_category_constructible<pseudo_index>);
 static_assert(!is_category_constructible<upvalue_index>);
+
+#include <ostream>
+
+TEST_SUITE("Dummy Suite")
+{
+    using namespace meorawr::hyjal;
+
+    TEST_CASE("Dummy")
+    {
+        using namespace meorawr::hyjal::lua::stack_algorithms;
+        lua::unique_state state = test::make_lua_state();
+
+        REQUIRE_EQ(state.empty(), true);
+        REQUIRE_EQ(state.size(), 0);
+        REQUIRE_EQ(state.max_size(), LUAI_MAXCSTACK);
+
+        state.push_back(0);
+
+        REQUIRE_EQ(state.empty(), false);
+        REQUIRE_EQ(state.size(), 1);
+        REQUIRE_EQ(state.max_size(), LUAI_MAXCSTACK);
+
+        for (int i = 1; i < LUA_MINSTACK; ++i) {
+            state.push_back(i);
+        }
+
+        REQUIRE_EQ(state.empty(), false);
+        REQUIRE_EQ(state.size(), LUA_MINSTACK);
+        REQUIRE_EQ(state.max_size(), LUAI_MAXCSTACK);
+
+        int i = 0;
+        for (lua::value_reference ref : state) {
+            CHECK_EQ(ref.type(), lua::value_type::number);
+            CHECK_EQ(lua::value_cast<int>(ref), i++);
+        }
+
+        auto s = lua::value_cast<std::string_view>(state.at(3));
+        auto d = lua::value_cast<int>(state.at(9));
+
+        REQUIRE_EQ(d, 8);
+        REQUIRE(s.compare("2") == 0);
+
+        state.clear();
+        state.push_back("test string 1");
+        state.push_back("test string 2");
+        state.push_back("test string 3");
+    }
+}
